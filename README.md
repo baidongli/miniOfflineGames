@@ -21,6 +21,7 @@ A collection of polished offline mini-games for iOS and Android. Every game supp
 | **Connect Four** | ✓ | ✓ | ✓ | Turn-based 2-player classic, 4-in-a-row to win |
 | **Bomb Sweep** | ✓ | ✓ | ✓ | 4-player realtime arena: drop bombs, dodge blasts, last alive wins |
 | **Reversi** | ✓ | ✓ | ✓ | 2-player Othello with positional minimax AI |
+| **2048** | ✓ |   | ✓ | Slide-and-merge tile puzzle; race to 2048 |
 
 ## Project status
 

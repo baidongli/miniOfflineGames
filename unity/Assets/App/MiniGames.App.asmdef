@@ -12,6 +12,7 @@
         "MiniGames.Games.ConnectFour",
         "MiniGames.Games.BombSweep",
         "MiniGames.Games.Reversi",
+        "MiniGames.Games.NumberMerge",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

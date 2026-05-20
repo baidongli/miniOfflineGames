@@ -1,0 +1,17 @@
+{
+    "name": "MiniGames.Games.NumberMerge",
+    "rootNamespace": "MiniGames.Games.NumberMerge",
+    "references": [
+        "MiniGames.GameModule",
+        "MiniGames.Networking"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

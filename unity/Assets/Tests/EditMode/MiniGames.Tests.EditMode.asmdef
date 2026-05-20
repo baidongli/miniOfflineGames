@@ -4,6 +4,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
+        "MiniGames.App",
         "MiniGames.Networking",
         "MiniGames.GameModule",
         "MiniGames.Games.ColorBlocks",

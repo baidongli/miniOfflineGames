@@ -65,10 +65,20 @@ miniOfflineGames/
 │   ├── android/          Kotlin Nearby bridge (Gradle)
 │   └── ios/              Swift Nearby bridge (xcodegen + CocoaPods)
 └── docs/
-    ├── architecture.md       Module boundaries
-    ├── networking.md         Wire protocol, host authority, reconciliation
-    ├── first_time_setup.md   One-time Unity bootstrap
-    └── games/                Per-game rules
+    ├── architecture.md           Module boundaries
+    ├── networking.md             Wire protocol, host authority, reconciliation
+    ├── multiplayer_patterns.md   Decision tree for the 4 sync patterns
+    ├── first_time_setup.md       One-time Unity bootstrap
+    └── games/                    Per-game rules (10 .md files)
+
+Top-level reading order for a new contributor:
+
+1. `README.md` (you are here) — what + status.
+2. `GAMEPLAY.md` — what the player experiences.
+3. `ROADMAP.md` — what's done, what's next, in what order.
+4. `CLAUDE.md` — how to add a new game + asmdef rules.
+5. `docs/architecture.md` — module dependencies + service inventory.
+6. `docs/multiplayer_patterns.md` — pick the right sync model for new games.
 ```
 
 ## First-time setup

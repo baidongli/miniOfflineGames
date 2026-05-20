@@ -113,13 +113,105 @@ time. Don't get stuck with no legal placement.
 
 ---
 
+---
+
+## Tetris
+
+**Goal**: clear lines. Modern 7-bag RNG; 2+ line clears send garbage to
+opponents in multiplayer.
+
+**Controls**: tap left/right halves to shift, tap to rotate, swipe down
+for soft drop, flick down for hard drop. Hold button stashes the current
+piece.
+
+**Scoring**: 100/300/500/800 per Single/Double/Triple/Tetris × level.
++1 per soft-drop row, +2 per hard-drop row.
+
+**MP attack**: 2 lines = 1 garbage. 3 lines = 2 garbage. **Tetris = 4
+garbage** (king move).
+
+---
+
+## Bomb Sweep
+
+**Goal**: be the last one standing in a 13×11 arena.
+
+**Controls**: D-pad / swipe to move, A-button to drop a bomb on your
+current cell.
+
+**Bombs**: 3-second fuse. Explosion is a cross extending Range cells
+in 4 directions. Hard walls block; soft blocks destruct.
+
+**Power-ups** from destroyed soft blocks (30% drop):
+- Bombs+ : more simultaneous bombs
+- Range+ : longer explosions
+- Speed+ : faster movement
+
+**Death**: stand on a lit explosion cell.
+
+---
+
+## Connect Four
+
+**Goal**: 4 in a row (horizontal, vertical, or diagonal). 2 players.
+
+**Controls**: tap a column to drop your disc.
+
+**MP**: turn-based. Whoever's player-id sorts first is yellow and moves
+first.
+
+---
+
+## Reversi (Othello)
+
+**Goal**: have the most discs at the end of an 8×8 board.
+
+**Controls**: tap a highlighted legal cell. "Pass" button activates only
+when you have no legal move.
+
+**Rules**: place a disc that sandwiches at least one opponent disc in
+any of 8 directions; all sandwiched discs flip to your color.
+
+---
+
+## 2048
+
+**Goal**: combine "2" tiles into "4", "8", "16"... reach 2048 to win.
+
+**Controls**: swipe in 4 directions. All tiles slide; same-value tiles
+in the slide path merge.
+
+**MP**: each player sees the **same** initial layout and tile sequence
+(seeded), so it's a pure skill race. First to 2048 or highest score at
+timeout wins.
+
+---
+
+## Dots and Boxes
+
+**Goal**: claim more 1×1 boxes than your opponents by drawing edges.
+
+**Controls**: tap an undrawn edge between two dots.
+
+**The bonus turn**: completing the 4th side of a box claims it AND
+**lets you go again**. Chain-completing two boxes with one edge is a
+killer move.
+
+**Players**: 2-4.
+
+---
+
 ## Quick reference: which game suits the moment
 
 | Vibe | Pick |
 |---|---|
-| "I want a long, calm puzzle" | Color Blocks |
-| "We want a chaotic 2-minute brawl" | Snakes |
+| "I want a long, calm puzzle" | Color Blocks, Tetris |
+| "We want a chaotic 2-minute brawl" | Snakes, Bomb Sweep |
 | "We want a strategic territory fight" | Maze Paint |
-| "Solo airplane flight" | Fruit Merge |
+| "Solo airplane flight" | Fruit Merge, 2048 |
+| "Two-player tabletop classic" | Connect Four, Reversi |
+| "Pen-and-paper nostalgia" | Dots and Boxes |
+| "Quick high-score chase" | 2048 |
+| "First time meeting kid cousins" | Connect Four, Dots and Boxes |
 
 Have fun. Don't drop the host's phone.

@@ -231,17 +231,25 @@ bridge layer hides this behind a single `IGameTransport` C# interface.
 |---|---|
 | Protocol serialization | 7 |
 | Color Blocks (logic + MP + integration + AI) | 30 |
+| Tetris (logic + MP + AI) | 15 |
 | Snakes (logic + MP + integration + AI) | 20 |
 | Maze Paint (logic + MP + integration + AI) | 13 |
 | Fruit Merge (logic + MP + integration + AI) | 22 |
+| Bomb Sweep (logic + AI) | 8 |
+| Connect Four (logic + MP + AI) | 15 |
+| Reversi (logic + MP + AI) | 11 |
+| 2048 / Number Merge (logic + MP + AI) | 11 |
+| Dots and Boxes (logic + MP + AI) | 9 |
 | Input dispatcher | 4 |
 | MockTransport | 5 |
-| RoomManager + game-msg routing | 9 |
+| RoomManager + game-msg routing + reconnect | 12 |
 | App state machine | 8 |
 | EnergyTimer | 9 |
 | JsonSaveStore | 5 |
 | VirtualTicker | 4 |
-| **Total** | **~136** |
+| IRng | 4 |
+| CPU controllers (cross-game smoke) | 5 |
+| **Total** | **~221** |
 
 ## Open Decisions / Backlog
 

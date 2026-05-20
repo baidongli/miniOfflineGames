@@ -23,9 +23,17 @@ namespace MiniGames.Networking.Session
         public string LocalDisplayName { get; }
         public string SelectedGameId { get; private set; }
 
+        /// <summary>On clients, the peer id of the host. Null on host itself or before connection.</summary>
+        public PeerId? HostPeer { get; private set; }
+
+        public IReadOnlyDictionary<PeerId, PlayerSlot> ConnectedPlayers => _players;
+
         public event Action<RoomSnapshot> SnapshotChanged;
         public event Action<StartGame> GameStarting;
         public event Action<PeerId, MessageType, ArraySegment<byte>> MessageReceived;
+
+        /// <summary>Fires for any 0x80+ message; the body slice excludes the leading type byte.</summary>
+        public event Action<PeerId, MessageType, ArraySegment<byte>> GameMessageReceived;
 
         public RoomManager(IGameTransport transport, IMessageSerializer serializer,
             string localPlayerId, string localDisplayName)
@@ -68,6 +76,35 @@ namespace MiniGames.Networking.Session
             GameStarting?.Invoke(msg);
         }
 
+        // --- Game message send API (game-specific 0x80+ payloads). The game
+        // serializes its own body bytes; we just frame with a type byte and ship. ---
+
+        public void SendGameMessageToHost(MessageType type, byte[] body, bool reliable)
+        {
+            if (IsHost) return; // host has no host to send to
+            if (HostPeer == null) return;
+            _transport.Send(HostPeer.Value, FrameRaw(type, body), reliable);
+        }
+
+        public void BroadcastGameMessage(MessageType type, byte[] body, bool reliable)
+        {
+            _transport.Broadcast(FrameRaw(type, body), reliable);
+        }
+
+        public void SendGameMessageTo(PeerId peer, MessageType type, byte[] body, bool reliable)
+        {
+            _transport.Send(peer, FrameRaw(type, body), reliable);
+        }
+
+        private static ArraySegment<byte> FrameRaw(MessageType type, byte[] body)
+        {
+            int len = body?.Length ?? 0;
+            var buf = new byte[1 + len];
+            buf[0] = (byte)type;
+            if (len > 0) Buffer.BlockCopy(body, 0, buf, 1, len);
+            return new ArraySegment<byte>(buf);
+        }
+
         // --- internals ---
 
         private void OnConnectionResult(PeerId peer, ConnectionStatus status)
@@ -79,6 +116,7 @@ namespace MiniGames.Networking.Session
             }
             else
             {
+                HostPeer = peer;
                 // Send Hello to host.
                 var hello = new Hello
                 {
@@ -102,6 +140,14 @@ namespace MiniGames.Networking.Session
         {
             var type = _serializer.PeekType(payload);
             MessageReceived?.Invoke(peer, type, payload);
+
+            if ((byte)type >= (byte)MessageType.GameSpecificBase)
+            {
+                // Strip the leading type byte; hand the body to game code.
+                var body = new ArraySegment<byte>(payload.Array, payload.Offset + 1, payload.Count - 1);
+                GameMessageReceived?.Invoke(peer, type, body);
+                return;
+            }
 
             switch (type)
             {

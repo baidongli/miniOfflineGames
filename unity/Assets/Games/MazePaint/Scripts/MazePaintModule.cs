@@ -13,7 +13,7 @@ namespace MiniGames.Games.MazePaint
         public string DisplayName => "Maze Paint";
         public GameCapabilities Capabilities =>
             GameCapabilities.Solo | GameCapabilities.Multiplayer | GameCapabilities.SameDevice;
-        public int MinPlayers => 1;
+        public int MinPlayers => 2;
         public int MaxPlayers => 4;
 
         public Task LoadAsync(GameContext ctx) => Task.CompletedTask;

@@ -13,7 +13,7 @@ namespace MiniGames.Games.FruitMerge
         public string DisplayName => "Fruit Merge";
         public GameCapabilities Capabilities =>
             GameCapabilities.Solo | GameCapabilities.Multiplayer;
-        public int MinPlayers => 1;
+        public int MinPlayers => 2;
         public int MaxPlayers => 4;
 
         public Task LoadAsync(GameContext ctx) => Task.CompletedTask;

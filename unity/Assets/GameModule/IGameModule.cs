@@ -24,7 +24,10 @@ namespace MiniGames.GameModule
         string Id { get; }
         string DisplayName { get; }
         GameCapabilities Capabilities { get; }
+
+        /// <summary>Min players in any multiplayer mode (always &gt;= 2). Solo is implicit when Capabilities.Solo is set.</summary>
         int MinPlayers { get; }
+        /// <summary>Max players in any multiplayer mode.</summary>
         int MaxPlayers { get; }
 
         Task LoadAsync(GameContext ctx);

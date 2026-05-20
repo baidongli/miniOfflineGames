@@ -18,7 +18,7 @@ namespace MiniGames.App.Bootstrap
         private float _accum;
         private float _period;
 
-        public void Start(float hz, Action onTick)
+        public void Begin(float hz, Action onTick)
         {
             if (hz <= 0f) throw new ArgumentOutOfRangeException(nameof(hz));
             Hz = hz;

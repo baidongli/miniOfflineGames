@@ -12,7 +12,7 @@ namespace MiniGames.GameModule.Tick
     {
         bool IsRunning { get; }
         float Hz { get; }
-        void Start(float hz, Action onTick);
+        void Begin(float hz, Action onTick);
         void Stop();
     }
 }

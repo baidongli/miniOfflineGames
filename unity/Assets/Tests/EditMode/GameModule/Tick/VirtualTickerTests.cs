@@ -10,7 +10,7 @@ namespace MiniGames.Tests.GameModule.Tick
         {
             var t = new VirtualTicker();
             int fired = 0;
-            t.Start(hz: 10f, () => fired++);
+            t.Begin(hz: 10f, () => fired++);
 
             // 0.25s @ 10Hz = 2 full ticks + 0.05 leftover.
             int n = t.Advance(0.25f);
@@ -29,7 +29,7 @@ namespace MiniGames.Tests.GameModule.Tick
         {
             var t = new VirtualTicker();
             int fired = 0;
-            t.Start(hz: 1f, () => fired++);
+            t.Begin(hz: 1f, () => fired++);
             t.AdvanceTicks(7);
             Assert.AreEqual(7, fired);
             Assert.AreEqual(7, t.TotalTicksFired);
@@ -42,7 +42,7 @@ namespace MiniGames.Tests.GameModule.Tick
             int fired = 0;
             VirtualTicker captured = null;
             captured = t;
-            t.Start(hz: 100f, () =>
+            t.Begin(hz: 100f, () =>
             {
                 fired++;
                 if (fired == 2) captured.Stop();
@@ -57,7 +57,7 @@ namespace MiniGames.Tests.GameModule.Tick
         public void Start_with_zero_hz_throws()
         {
             var t = new VirtualTicker();
-            Assert.Throws<System.ArgumentOutOfRangeException>(() => t.Start(0f, () => { }));
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => t.Begin(0f, () => { }));
         }
     }
 }

@@ -6,6 +6,7 @@ using MiniGames.Games.MazePaint;
 using MiniGames.Games.Snakes;
 using MiniGames.Games.BombSweep;
 using MiniGames.Games.ConnectFour;
+using MiniGames.Games.Reversi;
 using MiniGames.Games.Tetris;
 
 namespace MiniGames.App.Bootstrap
@@ -26,7 +27,8 @@ namespace MiniGames.App.Bootstrap
             new MazePaintModule(),
             new BombSweepModule(),
             new FruitMergeModule(),
-            new ConnectFourModule()
+            new ConnectFourModule(),
+            new ReversiModule()
         };
 
         public static IGameModule FindById(string id)

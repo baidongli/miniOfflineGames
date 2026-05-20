@@ -1,0 +1,17 @@
+{
+    "name": "MiniGames.Games.Reversi",
+    "rootNamespace": "MiniGames.Games.Reversi",
+    "references": [
+        "MiniGames.GameModule",
+        "MiniGames.Networking"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -13,7 +13,8 @@
         "MiniGames.Games.MazePaint",
         "MiniGames.Games.Tetris",
         "MiniGames.Games.ConnectFour",
-        "MiniGames.Games.BombSweep"
+        "MiniGames.Games.BombSweep",
+        "MiniGames.Games.Reversi"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

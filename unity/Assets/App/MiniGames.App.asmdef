@@ -11,6 +11,7 @@
         "MiniGames.Games.Tetris",
         "MiniGames.Games.ConnectFour",
         "MiniGames.Games.BombSweep",
+        "MiniGames.Games.Reversi",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

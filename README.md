@@ -14,6 +14,7 @@ A collection of polished offline mini-games for iOS and Android. Every game supp
 | Game | Solo | Same-device | Nearby | Mechanic |
 |---|---|---|---|---|
 | **Color Blocks** | ✓ | ✓ | ✓ | Drag pieces, clear rows/cols; combos send junk to opponents |
+| **Tetris** | ✓ | ✓ | ✓ | Classic falling-tetromino with 7-bag RNG; 2+ line clears send garbage |
 | **Snakes** | ✓ | ✓ | ✓ | Realtime grid snake; 10Hz host-authoritative + client prediction |
 | **Maze Paint** | ✓ | ✓ | ✓ | Paper.io-style territory grab with flood-fill capture |
 | **Fruit Merge** | ✓ |   | ✓ | Grid drop-and-collapse with chain merges |

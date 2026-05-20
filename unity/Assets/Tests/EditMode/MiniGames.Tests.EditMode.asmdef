@@ -10,7 +10,8 @@
         "MiniGames.Games.ColorBlocks",
         "MiniGames.Games.Snakes",
         "MiniGames.Games.FruitMerge",
-        "MiniGames.Games.MazePaint"
+        "MiniGames.Games.MazePaint",
+        "MiniGames.Games.Tetris"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

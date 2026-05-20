@@ -1,15 +1,9 @@
 {
-    "name": "MiniGames.App",
-    "rootNamespace": "MiniGames.App",
+    "name": "MiniGames.Games.Tetris",
+    "rootNamespace": "MiniGames.Games.Tetris",
     "references": [
-        "MiniGames.Networking",
         "MiniGames.GameModule",
-        "MiniGames.Games.ColorBlocks",
-        "MiniGames.Games.Snakes",
-        "MiniGames.Games.FruitMerge",
-        "MiniGames.Games.MazePaint",
-        "MiniGames.Games.Tetris",
-        "Unity.TextMeshPro"
+        "MiniGames.Networking"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

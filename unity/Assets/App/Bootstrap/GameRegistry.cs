@@ -4,6 +4,7 @@ using MiniGames.Games.ColorBlocks;
 using MiniGames.Games.FruitMerge;
 using MiniGames.Games.MazePaint;
 using MiniGames.Games.Snakes;
+using MiniGames.Games.Tetris;
 
 namespace MiniGames.App.Bootstrap
 {
@@ -18,6 +19,7 @@ namespace MiniGames.App.Bootstrap
         public static IReadOnlyList<IGameModule> All { get; } = new IGameModule[]
         {
             new ColorBlocksModule(),
+            new TetrisModule(),
             new SnakesModule(),
             new FruitMergeModule(),
             new MazePaintModule()

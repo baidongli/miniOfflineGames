@@ -1,0 +1,22 @@
+{
+    "name": "MiniGames.App",
+    "rootNamespace": "MiniGames.App",
+    "references": [
+        "MiniGames.Networking",
+        "MiniGames.GameModule",
+        "MiniGames.Games.ColorBlocks",
+        "MiniGames.Games.Snakes",
+        "MiniGames.Games.FruitMerge",
+        "MiniGames.Games.MazePaint",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

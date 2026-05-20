@@ -1,0 +1,17 @@
+{
+    "name": "MiniGames.Games.FruitMerge",
+    "rootNamespace": "MiniGames.Games.FruitMerge",
+    "references": [
+        "MiniGames.GameModule",
+        "MiniGames.Networking"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

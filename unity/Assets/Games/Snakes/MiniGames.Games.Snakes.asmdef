@@ -1,0 +1,17 @@
+{
+    "name": "MiniGames.Games.Snakes",
+    "rootNamespace": "MiniGames.Games.Snakes",
+    "references": [
+        "MiniGames.GameModule",
+        "MiniGames.Networking"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

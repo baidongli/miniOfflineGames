@@ -1,0 +1,71 @@
+# ---- Unity ----
+unity/[Ll]ibrary/
+unity/[Tt]emp/
+unity/[Oo]bj/
+unity/[Bb]uild/
+unity/[Bb]uilds/
+unity/[Ll]ogs/
+unity/[Mm]emoryCaptures/
+unity/[Uu]ser[Ss]ettings/
+unity/[Aa]ssets/AssetStoreTools*
+unity/[Aa]ssets/Plugins/Editor/JetBrains*
+unity/.vsconfig
+
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!unity/[Ll]ibrary/PackageCache/*/*.asset.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.aab
+*.ipa
+*.unitypackage
+*.app
+
+# Crashlytics generated file
+crashlytics-build.properties
+
+# Packed Addressables
+unity/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+# Temporary auto-generated Android Assets
+unity/[Aa]ssets/[Ss]treamingAssets/aa.meta
+unity/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# ---- IDE ----
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ---- Native plugins build artifacts ----
+native/android/**/build/
+native/android/**/.gradle/
+native/android/**/local.properties
+native/ios/**/build/
+native/ios/**/DerivedData/
+native/ios/**/Pods/
+native/ios/**/*.xcworkspace/xcuserdata/
+native/ios/**/*.xcodeproj/xcuserdata/
+native/ios/**/*.xcodeproj/project.xcworkspace/xcuserdata/

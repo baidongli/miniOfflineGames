@@ -1,0 +1,51 @@
+name: Native iOS bridge
+
+on:
+  push:
+    branches: [main, "claude/**"]
+    paths:
+      - "native/ios/**"
+      - ".github/workflows/native-ios.yml"
+  pull_request:
+    paths:
+      - "native/ios/**"
+      - ".github/workflows/native-ios.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install xcodegen and CocoaPods
+        run: |
+          brew install xcodegen
+          gem install cocoapods --no-document
+
+      - name: Generate Xcode project
+        working-directory: native/ios
+        run: xcodegen generate
+
+      - name: Pod install
+        working-directory: native/ios
+        run: pod install --repo-update
+
+      - name: Build framework
+        working-directory: native/ios
+        run: |
+          xcodebuild \
+            -workspace NearbyBridge.xcworkspace \
+            -scheme NearbyBridge \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            ARCHS=arm64 \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NearbyBridge-framework
+          path: native/ios/build/Build/Products/Release-iphoneos/NearbyBridge.framework

@@ -1,0 +1,33 @@
+name: NearbyBridge
+options:
+  bundleIdPrefix: com.minigames
+  deploymentTarget:
+    iOS: "14.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CLANG_ENABLE_MODULES: YES
+    DEFINES_MODULE: YES
+    SKIP_INSTALL: NO
+    BUILD_LIBRARY_FOR_DISTRIBUTION: YES
+    ENABLE_BITCODE: NO
+
+targets:
+  NearbyBridge:
+    type: framework
+    platform: iOS
+    sources:
+      - path: NearbyBridge
+    info:
+      path: NearbyBridge/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.minigames.nearby
+        MODULEMAP_FILE: ""
+        # The shim talks to Unity's UnitySendMessage which is undefined at
+        # framework link time; resolved when the host (Unity app) loads us.
+        OTHER_LDFLAGS: "-undefined dynamic_lookup"
+    dependencies:
+      - sdk: Foundation.framework

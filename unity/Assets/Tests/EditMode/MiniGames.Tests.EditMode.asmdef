@@ -1,0 +1,27 @@
+{
+    "name": "MiniGames.Tests.EditMode",
+    "rootNamespace": "MiniGames.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "MiniGames.Networking",
+        "MiniGames.GameModule",
+        "MiniGames.Games.ColorBlocks",
+        "MiniGames.Games.Snakes",
+        "MiniGames.Games.FruitMerge",
+        "MiniGames.Games.MazePaint"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

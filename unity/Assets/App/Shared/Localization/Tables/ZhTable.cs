@@ -20,6 +20,19 @@ namespace MiniGames.App.Shared.Localization.Tables
             { "game.dots_and_boxes.title", "点格棋" },
             { "game.battleship.title", "海战" },
 
+            // 游戏卡片下方的一句话简介
+            { "game.color_blocks.tagline",   "拖块消行" },
+            { "game.tetris.tagline",         "经典消除" },
+            { "game.snakes.tagline",         "活得更久" },
+            { "game.maze_paint.tagline",     "圈地为王" },
+            { "game.fruit_merge.tagline",    "合并连击" },
+            { "game.connect_four.tagline",   "四子连珠" },
+            { "game.bomb_sweep.tagline",     "炸弹乱斗" },
+            { "game.reversi.tagline",        "翻转更多棋子" },
+            { "game.number_merge.tagline",   "滑动合并到 2048" },
+            { "game.dots_and_boxes.tagline", "完成方格再来一手" },
+            { "game.battleship.tagline",     "击沉对方舰队" },
+
             // 通用按钮 / 标签
             { "ui.play", "开始" },
             { "ui.pause", "暂停" },

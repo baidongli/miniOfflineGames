@@ -129,6 +129,24 @@ namespace MiniGames.App.Navigation
                 LocalPlayerId = _services.LocalPlayerId,
                 Players = new List<PlayerResult>()
             };
+
+            // Auto-submit the local player's score to the per-game leaderboard.
+            // Skips when no score (turn-based games) or no leaderboard service.
+            if (_services?.HighScores != null && SelectedGame != null && results.Players != null)
+            {
+                foreach (var p in results.Players)
+                {
+                    if (p == null || p.PlayerId != _services.LocalPlayerId) continue;
+                    if (p.Score <= 0) continue;   // turn-based games typically use Score=0
+                    _services.HighScores.Submit(
+                        SelectedGame.Id,
+                        p.PlayerId,
+                        _services.LocalDisplayName,
+                        p.Score);
+                    break;
+                }
+            }
+
             ClearSession();
             Transition(AppState.Results, () => _view.ShowResults(SelectedGame, results));
         }

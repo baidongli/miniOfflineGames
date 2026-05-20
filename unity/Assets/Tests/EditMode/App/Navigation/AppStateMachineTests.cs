@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MiniGames.App.Bootstrap;
 using MiniGames.App.Navigation;
+using MiniGames.App.Shared.HighScores;
 using MiniGames.App.Shared.Energy;
 using MiniGames.GameModule;
 using MiniGames.Networking.Protocol;
@@ -161,6 +162,43 @@ namespace MiniGames.Tests.App.Navigation
 
             _sm.DismissResults();
             Assert.AreEqual(AppState.Hub, _sm.State);
+        }
+
+        [Test]
+        public void EndGame_auto_submits_local_player_score_to_HighScores()
+        {
+            // Hand-build an in-memory ISaveStore so HighScores can persist
+            // without touching the filesystem.
+            var saveStore = new InMemoryStore();
+            var highScores = new HighScoresService(saveStore);
+            _services.HighScores = highScores;
+
+            _sm.GoToHub();
+            _sm.SelectGame(_gameSoloMp);
+            _sm.StartSolo();
+            _sm.EndGame(new GameResults
+            {
+                LocalPlayerId = "me",
+                Players = new List<PlayerResult>
+                {
+                    new PlayerResult { PlayerId = "me", Score = 250, Place = 1 },
+                    new PlayerResult { PlayerId = "rival", Score = 100, Place = 2 },
+                }
+            });
+
+            var top = highScores.Top("test");
+            Assert.AreEqual(1, top.Count, "only the local player's score should be submitted");
+            Assert.AreEqual(250, top[0].Score);
+            Assert.AreEqual("me", top[0].PlayerId);
+        }
+
+        private sealed class InMemoryStore : MiniGames.GameModule.ISaveStore
+        {
+            private readonly Dictionary<string, object> _d = new Dictionary<string, object>();
+            public bool TryLoad<T>(string key, out T value) where T : class
+            { if (_d.TryGetValue(key, out var v)) { value = (T)v; return true; } value = null; return false; }
+            public void Save<T>(string key, T value) where T : class { _d[key] = value; }
+            public void Delete(string key) { _d.Remove(key); }
         }
 
         [Test]

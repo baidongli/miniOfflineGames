@@ -1,4 +1,5 @@
 using System;
+using MiniGames.App.Shared.Achievements;
 using MiniGames.App.Shared.Analytics;
 using MiniGames.App.Shared.Audio;
 using MiniGames.App.Shared.Energy;
@@ -42,6 +43,7 @@ namespace MiniGames.App.Bootstrap
             var highScores = new HighScoresService(save);
             var localization = new LocalizationService(settings);
             L10n.Active = localization;
+            var achievements = new AchievementsService(save);
 
             // First-launch: seed the SettingsService's DisplayName from
             // the device-local persisted name so the user doesn't see "".
@@ -60,6 +62,7 @@ namespace MiniGames.App.Bootstrap
                 Settings = settings,
                 HighScores = highScores,
                 Localization = localization,
+                Achievements = achievements,
                 LocalPlayerId = LoadOrCreatePlayerId(),
                 LocalDisplayName = settings.Current.DisplayName
             };
@@ -146,6 +149,7 @@ namespace MiniGames.App.Bootstrap
         public SettingsService Settings;
         public HighScoresService HighScores;
         public LocalizationService Localization;
+        public AchievementsService Achievements;
         public string LocalPlayerId;
         public string LocalDisplayName;
     }

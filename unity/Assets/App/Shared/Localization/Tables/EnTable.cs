@@ -20,6 +20,19 @@ namespace MiniGames.App.Shared.Localization.Tables
             { "game.dots_and_boxes.title", "Dots and Boxes" },
             { "game.battleship.title", "Battleship" },
 
+            // One-line taglines shown under each game card on the Hub.
+            { "game.color_blocks.tagline",   "Drag pieces, clear lines" },
+            { "game.tetris.tagline",         "Stack the falling blocks" },
+            { "game.snakes.tagline",         "Grow without crashing" },
+            { "game.maze_paint.tagline",     "Claim the most territory" },
+            { "game.fruit_merge.tagline",    "Chain the merges" },
+            { "game.connect_four.tagline",   "Four in a row" },
+            { "game.bomb_sweep.tagline",     "Drop bombs, dodge blasts" },
+            { "game.reversi.tagline",        "Flip the most discs" },
+            { "game.number_merge.tagline",   "Slide and combine to 2048" },
+            { "game.dots_and_boxes.tagline", "Complete boxes for bonus turns" },
+            { "game.battleship.tagline",     "Sink the hidden fleet" },
+
             // Generic UI verbs / labels.
             { "ui.play", "Play" },
             { "ui.pause", "Pause" },

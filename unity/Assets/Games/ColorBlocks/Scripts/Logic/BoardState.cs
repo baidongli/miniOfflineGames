@@ -66,6 +66,39 @@ namespace MiniGames.Games.ColorBlocks.Logic
             for (int y = 0; y < Size; y++) _cells[Index(x, y)] = 0;
         }
 
+        /// <summary>
+        /// Used by multiplayer "attack" mechanic: push junk rows in at the
+        /// bottom, shifting everything up. Cells that would fall off the top
+        /// are discarded. Each junk row has a single gap whose column comes
+        /// from the deterministic RNG so the move is reproducible.
+        /// Returns true if any existing cell was pushed out of bounds.
+        /// </summary>
+        public bool PushJunkRows(int count, int junkColor, System.Random rng)
+        {
+            if (count <= 0) return false;
+
+            // Check overflow BEFORE shifting (those rows are about to be lost).
+            bool overflow = false;
+            for (int y = Size - count; y < Size && !overflow; y++)
+                for (int x = 0; x < Size; x++)
+                    if (_cells[Index(x, y)] != 0) { overflow = true; break; }
+
+            // Shift up.
+            for (int y = Size - 1; y >= count; y--)
+                for (int x = 0; x < Size; x++)
+                    _cells[Index(x, y)] = _cells[Index(x, y - count)];
+
+            // Fill the new bottom rows with junk + one gap per row.
+            for (int row = 0; row < count; row++)
+            {
+                int gap = rng.Next(Size);
+                for (int x = 0; x < Size; x++)
+                    _cells[Index(x, row)] = (byte)(x == gap ? 0 : junkColor);
+            }
+
+            return overflow;
+        }
+
         private static int Index(int x, int y) => y * Size + x;
 
         private static void CheckBounds(int x, int y)

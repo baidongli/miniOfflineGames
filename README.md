@@ -18,6 +18,7 @@ A collection of polished offline mini-games for iOS and Android. Every game supp
 | **Snakes** | ✓ | ✓ | ✓ | Realtime grid snake; 10Hz host-authoritative + client prediction |
 | **Maze Paint** | ✓ | ✓ | ✓ | Paper.io-style territory grab with flood-fill capture |
 | **Fruit Merge** | ✓ |   | ✓ | Grid drop-and-collapse with chain merges |
+| **Connect Four** | ✓ | ✓ | ✓ | Turn-based 2-player classic, 4-in-a-row to win |
 
 ## Project status
 

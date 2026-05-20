@@ -1,0 +1,17 @@
+{
+    "name": "MiniGames.Games.ConnectFour",
+    "rootNamespace": "MiniGames.Games.ConnectFour",
+    "references": [
+        "MiniGames.GameModule",
+        "MiniGames.Networking"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

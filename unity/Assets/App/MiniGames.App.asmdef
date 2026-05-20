@@ -9,6 +9,7 @@
         "MiniGames.Games.FruitMerge",
         "MiniGames.Games.MazePaint",
         "MiniGames.Games.Tetris",
+        "MiniGames.Games.ConnectFour",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

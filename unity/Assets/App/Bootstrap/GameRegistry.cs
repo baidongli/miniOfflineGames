@@ -4,6 +4,7 @@ using MiniGames.Games.ColorBlocks;
 using MiniGames.Games.FruitMerge;
 using MiniGames.Games.MazePaint;
 using MiniGames.Games.Snakes;
+using MiniGames.Games.ConnectFour;
 using MiniGames.Games.Tetris;
 
 namespace MiniGames.App.Bootstrap
@@ -21,8 +22,9 @@ namespace MiniGames.App.Bootstrap
             new ColorBlocksModule(),
             new TetrisModule(),
             new SnakesModule(),
+            new MazePaintModule(),
             new FruitMergeModule(),
-            new MazePaintModule()
+            new ConnectFourModule()
         };
 
         public static IGameModule FindById(string id)

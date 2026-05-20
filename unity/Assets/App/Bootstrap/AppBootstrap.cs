@@ -33,7 +33,7 @@ namespace MiniGames.App.Bootstrap
             Application.runInBackground = false;
 
             var transport = NearbyConnectionsTransport.CreateAndAttach();
-            var serializer = new MessagePackMessageSerializer();
+            var serializer = new JsonMessageSerializer();
             var save = JsonSaveStore.ForPlayer();
             var analytics = new DebugAnalytics();
             var haptics = ChoosePlatformHaptics();

@@ -1,35 +1,43 @@
 # Multiplayer Sync Patterns
 
-Across the 10 games shipped, we use **four** distinct multiplayer
+Across the 11 games shipped, we use **five** distinct multiplayer
 synchronization patterns. Picking the right one is the single most
 important decision when adding a new game.
 
 ## Decision tree
 
 ```
-Is the game realtime (player input is meaningful every fraction of
-a second, not just on discrete actions)?
+Is the game realtime (player input matters every fraction of a second,
+not just on discrete actions)?
 │
 ├── Yes  ─── Snakes / Maze Paint / Bomb Sweep
-│           Use pattern (3): host-authoritative tick + client prediction.
+│           Pattern (3): host-authoritative tick + client prediction.
 │
 └── No   ─── Discrete actions only.
             │
             ├── Does each player have their own playing field?
             │   │
             │   ├── Yes  ─── Color Blocks / Tetris / Fruit Merge / 2048
-            │   │           Use pattern (1) or (2):
-            │   │             - (1) Event-synced attacks: actions can
-            │   │                   affect opponents (junk lines). Per-
-            │   │                   player game state diverges over time.
-            │   │             - (2) Pure score race: each player sees
-            │   │                   the same deterministic content via a
-            │   │                   shared seed; broadcast progress for
-            │   │                   the opponent UI.
+            │   │           Patterns (1) or (2):
+            │   │             - (1) Event-synced attacks: moves can
+            │   │                   affect opponents (junk lines).
+            │   │             - (2) Pure score race: same seeded
+            │   │                   content; broadcast progress only.
             │   │
-            │   └── No   ─── Shared single board / state.
-            │                Use pattern (4): turn-based broadcast.
-            │                  - Connect Four / Reversi / Dots and Boxes
+            │   └── No   ─── Shared board / state.
+            │                │
+            │                ├── Is any per-player state SECRET?
+            │                │   │
+            │                │   ├── Yes  ─── Battleship
+            │                │   │           Pattern (5): turn-based +
+            │                │   │           hidden state, asymmetric
+            │                │   │           shot/result exchange.
+            │                │   │
+            │                │   └── No   ─── Connect Four / Reversi /
+            │                │                Dots and Boxes
+            │                │                Pattern (4): turn-based
+            │                │                broadcast, deterministic
+            │                │                game state.
 ```
 
 ## (1) Event-synced attacks
@@ -120,9 +128,37 @@ Cons: must be reliable (lost move = stuck), doesn't extend to realtime.
 - `Games/Reversi/Scripts/Multiplayer/MultiplayerReversi.cs`
 - `Games/DotsAndBoxes/Scripts/Multiplayer/MultiplayerDots.cs`
 
+## (5) Turn-based with hidden state
+
+**Used by**: Battleship.
+
+A variant of (4) where each player keeps a piece of **private** state
+that's never broadcast in full. Wire protocol is asymmetric:
+
+- Shooter sends `ShotFired(x, y, moveNumber)` toward the target.
+- Target resolves the shot against its OwnFleet (private), replies
+  with `ShotResult(x, y, hit | miss | sunk, sunkCells?)`.
+- Shooter updates an OpponentTracker built only from received
+  ShotResults - never learns opponent positions speculatively.
+
+Each peer keeps two boards:
+- **OwnFleet** - my ships, private, never serialized to the wire.
+- **OpponentTracker** - built from received ShotResults.
+
+Phase machine: `Setup → Playing → GameOver`. Setup ends when both
+sides have broadcast `ShipsReady`.
+
+Pros: enables information-asymmetry games that pattern (4) can't.
+
+Cons: asymmetric round-trip per move costs one extra hop of latency;
+phase machine adds complexity.
+
+**Files**:
+- `Games/Battleship/Scripts/Multiplayer/MultiplayerBattleship.cs`
+
 ## Common infrastructure
 
-All four patterns ride on top of:
+All five patterns ride on top of:
 
 - **Wire framing**: `[1 byte MessageType][N bytes MessagePack body]`.
 - **Type space**: 0x00-0x7F system messages, 0x80-0xFF reserved for

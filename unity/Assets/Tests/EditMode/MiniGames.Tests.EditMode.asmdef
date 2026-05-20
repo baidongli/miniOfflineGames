@@ -16,7 +16,8 @@
         "MiniGames.Games.BombSweep",
         "MiniGames.Games.Reversi",
         "MiniGames.Games.NumberMerge",
-        "MiniGames.Games.DotsAndBoxes"
+        "MiniGames.Games.DotsAndBoxes",
+        "MiniGames.Games.Battleship"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

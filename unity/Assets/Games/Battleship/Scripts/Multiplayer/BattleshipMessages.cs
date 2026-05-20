@@ -1,0 +1,45 @@
+using System.Collections.Generic;
+using MessagePack;
+using MiniGames.Networking.Protocol;
+
+namespace MiniGames.Games.Battleship.Multiplayer
+{
+    public enum BTLMessageType : byte
+    {
+        ShipsReady = (byte)MessageType.GameSpecificBase,        // 0x80
+        ShotFired  = (byte)MessageType.GameSpecificBase + 1,    // 0x81 shooter -> target
+        ShotResult = (byte)MessageType.GameSpecificBase + 2,    // 0x82 target  -> shooter
+        Resign     = (byte)MessageType.GameSpecificBase + 3,    // 0x83
+    }
+
+    [MessagePackObject(keyAsPropertyName: true)]
+    public sealed class BTLShipsReadyMessage
+    {
+        public string PlayerId;
+    }
+
+    [MessagePackObject(keyAsPropertyName: true)]
+    public sealed class BTLShotFiredMessage
+    {
+        public string PlayerId;     // shooter
+        public int X, Y;
+        public int MoveNumber;
+    }
+
+    [MessagePackObject(keyAsPropertyName: true)]
+    public sealed class BTLShotResultMessage
+    {
+        public string PlayerId;     // the responder (target)
+        public int X, Y;
+        public byte Result;         // ShotResult enum
+        public byte SunkKind;       // 0 if not sunk; otherwise ShipKind
+        public List<int> SunkCellsFlat = new List<int>();   // x,y pairs of the sunk ship
+        public int InResponseToMove;
+    }
+
+    [MessagePackObject(keyAsPropertyName: true)]
+    public sealed class BTLResignMessage
+    {
+        public string PlayerId;
+    }
+}

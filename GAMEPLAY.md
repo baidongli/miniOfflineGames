@@ -201,6 +201,23 @@ killer move.
 
 ---
 
+## Battleship
+
+**Goal**: secretly place a fleet, then guess your opponent's grid one
+shot at a time. Sink all their ships to win.
+
+**Setup**: drag the 5 ships (Carrier 5, Battleship 4, Cruiser 3,
+Submarine 3, Destroyer 2) onto your **private** grid. Tap **Ready**
+when done. The game starts once both players are ready.
+
+**Playing**: tap any unshot cell on the opponent's panel. Their device
+computes the result and tells you Miss / Hit / Sunk. One shot per turn.
+
+**MP**: the only game with hidden state. Neither side ever sees the
+other's full grid until the last ship sinks.
+
+---
+
 ## Quick reference: which game suits the moment
 
 | Vibe | Pick |
@@ -210,7 +227,8 @@ killer move.
 | "We want a strategic territory fight" | Maze Paint |
 | "Solo airplane flight" | Fruit Merge, 2048 |
 | "Two-player tabletop classic" | Connect Four, Reversi |
-| "Pen-and-paper nostalgia" | Dots and Boxes |
+| "Pen-and-paper nostalgia" | Dots and Boxes, Battleship |
+| "Bluff, deduction, mind games" | Battleship |
 | "Quick high-score chase" | 2048 |
 | "First time meeting kid cousins" | Connect Four, Dots and Boxes |
 

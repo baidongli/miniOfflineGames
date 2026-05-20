@@ -6,6 +6,7 @@ using MiniGames.Games.MazePaint;
 using MiniGames.Games.Snakes;
 using MiniGames.Games.BombSweep;
 using MiniGames.Games.ConnectFour;
+using MiniGames.Games.Battleship;
 using MiniGames.Games.DotsAndBoxes;
 using MiniGames.Games.NumberMerge;
 using MiniGames.Games.Reversi;
@@ -32,7 +33,8 @@ namespace MiniGames.App.Bootstrap
             new ConnectFourModule(),
             new ReversiModule(),
             new NumberMergeModule(),
-            new DotsAndBoxesModule()
+            new DotsAndBoxesModule(),
+            new BattleshipModule()
         };
 
         public static IGameModule FindById(string id)

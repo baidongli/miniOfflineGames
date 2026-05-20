@@ -23,6 +23,7 @@ A collection of polished offline mini-games for iOS and Android. Every game supp
 | **Reversi** | ✓ | ✓ | ✓ | 2-player Othello with positional minimax AI |
 | **2048** | ✓ |   | ✓ | Slide-and-merge tile puzzle; race to 2048 |
 | **Dots and Boxes** | ✓ | ✓ | ✓ | Turn-based 2-4 players, complete a box = bonus turn |
+| **Battleship** | ✓ | ✓ | ✓ | Hidden-fleet 2-player guess-and-sink classic |
 
 ## Project status
 

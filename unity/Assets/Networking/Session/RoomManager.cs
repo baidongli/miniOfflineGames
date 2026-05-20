@@ -15,8 +15,15 @@ namespace MiniGames.Networking.Session
     {
         private readonly IGameTransport _transport;
         private readonly IMessageSerializer _serializer;
+        private readonly Func<DateTimeOffset> _now;
 
         private readonly Dictionary<PeerId, PlayerSlot> _players = new Dictionary<PeerId, PlayerSlot>();
+
+        /// <summary>Disconnected players still holding their slot during the grace window.</summary>
+        private readonly Dictionary<string, DisconnectedSlot> _grace = new Dictionary<string, DisconnectedSlot>();
+
+        /// <summary>How long after a disconnect we keep the slot open for reconnection. Configurable.</summary>
+        public TimeSpan ReconnectGrace { get; set; } = TimeSpan.FromSeconds(10);
 
         public bool IsHost { get; private set; }
         public string LocalPlayerId { get; }
@@ -35,17 +42,28 @@ namespace MiniGames.Networking.Session
         /// <summary>Fires for any 0x80+ message; the body slice excludes the leading type byte.</summary>
         public event Action<PeerId, MessageType, ArraySegment<byte>> GameMessageReceived;
 
+        /// <summary>Fires when a previously-disconnected player reconnects within the grace window.</summary>
+        public event Action<PeerId, PlayerSlot> PlayerRestored;
+
         public RoomManager(IGameTransport transport, IMessageSerializer serializer,
-            string localPlayerId, string localDisplayName)
+            string localPlayerId, string localDisplayName,
+            Func<DateTimeOffset> now = null)
         {
             _transport = transport;
             _serializer = serializer;
+            _now = now ?? (() => DateTimeOffset.UtcNow);
             LocalPlayerId = localPlayerId;
             LocalDisplayName = localDisplayName;
 
             _transport.ConnectionResult += OnConnectionResult;
             _transport.Disconnected += OnDisconnected;
             _transport.PayloadReceived += OnPayloadReceived;
+        }
+
+        private struct DisconnectedSlot
+        {
+            public PlayerSlot Slot;
+            public DateTimeOffset At;
         }
 
         public void HostRoom(string serviceId)
@@ -132,8 +150,39 @@ namespace MiniGames.Networking.Session
 
         private void OnDisconnected(PeerId peer)
         {
-            if (_players.Remove(peer))
+            if (_players.TryGetValue(peer, out var slot))
+            {
+                _players.Remove(peer);
+                if (IsHost && !string.IsNullOrEmpty(slot.PlayerId))
+                {
+                    // Keep the slot warm for a short window so a brief WiFi
+                    // blip doesn't end the game; OnClientHello restores it.
+                    slot.IsConnected = false;
+                    _grace[slot.PlayerId] = new DisconnectedSlot { Slot = slot, At = _now() };
+                }
                 BroadcastSnapshot();
+            }
+        }
+
+        /// <summary>
+        /// Drop slots whose grace window expired. Call periodically (e.g. once
+        /// a second) on the host. No-op on clients.
+        /// </summary>
+        public void PruneStaleDisconnects()
+        {
+            if (!IsHost || _grace.Count == 0) return;
+            var now = _now();
+            List<string> expired = null;
+            foreach (var kv in _grace)
+                if (now - kv.Value.At >= ReconnectGrace)
+                {
+                    expired ??= new List<string>();
+                    expired.Add(kv.Key);
+                }
+            if (expired == null) return;
+            foreach (var id in expired) _grace.Remove(id);
+            // Snapshot already updated when the disconnect first happened;
+            // no need to broadcast again unless callers want to clean state.
         }
 
         private void OnPayloadReceived(PeerId peer, ArraySegment<byte> payload)
@@ -176,11 +225,26 @@ namespace MiniGames.Networking.Session
 
         private void OnClientHello(PeerId peer, Hello hello)
         {
+            // Reconnect path: if we still hold the slot from a recent disconnect,
+            // restore it (preserves ColorIndex, Ready, etc) instead of treating
+            // this as a fresh join.
+            if (!string.IsNullOrEmpty(hello.PlayerId) && _grace.TryGetValue(hello.PlayerId, out var held))
+            {
+                var restored = held.Slot;
+                restored.IsConnected = true;
+                restored.DisplayName = hello.DisplayName;
+                _players[peer] = restored;
+                _grace.Remove(hello.PlayerId);
+                PlayerRestored?.Invoke(peer, restored);
+                BroadcastSnapshot();
+                return;
+            }
+
             _players[peer] = new PlayerSlot
             {
                 PlayerId = hello.PlayerId,
                 DisplayName = hello.DisplayName,
-                ColorIndex = _players.Count,
+                ColorIndex = _players.Count + _grace.Count,
                 IsHost = false,
                 IsReady = false,
                 IsConnected = true
@@ -215,6 +279,9 @@ namespace MiniGames.Networking.Session
             });
             foreach (var kv in _players)
                 snap.Players.Add(kv.Value);
+            // Include grace-period slots so the UI shows them as "reconnecting...".
+            foreach (var kv in _grace)
+                snap.Players.Add(kv.Value.Slot);
             return snap;
         }
     }

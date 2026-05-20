@@ -7,6 +7,7 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.ugui": "1.0.0",
     "com.cysharp.unitask": "2.5.5",
+    "com.cysharp.messagepack": "2.5.187",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
     "com.unity.modules.unitywebrequest": "1.0.0",

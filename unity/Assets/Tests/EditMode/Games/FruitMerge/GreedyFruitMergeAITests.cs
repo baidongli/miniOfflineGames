@@ -18,16 +18,18 @@ namespace MiniGames.Tests.Games.FruitMerge
         [Test]
         public void AI_picks_the_column_with_a_same_tier_neighbor()
         {
-            // Set up: same-tier fruit at column 3 row 0; everything else
-            // empty. NextFruit is what TestSetup() forces.
+            // Same-tier fruit at (3, 0). Columns that produce an immediate
+            // merge: 2 (lands at (2,0), side-adjacent), 3 (lands at (3,1),
+            // below-adjacent), 4 (lands at (4,0), side-adjacent). The AI's
+            // tie-break prefers lower landings, so cols 2 and 4 (y=0) beat
+            // col 3 (y=1). Any of {2, 3, 4} is a "saw the neighbor" pick.
             var g = new FruitMergeGame(seed: 1);
             byte tier = g.NextFruit;
-            g.Grid.Set(3, 0, tier);  // a same-tier match if AI drops into col 3, lands at (3,1)
-            // Wait - dropping at col 3 lands at (3,1) since (3,0) is occupied;
-            // (3,0) is below (3,1) -> they're adjacent. Score = +10 (below).
+            g.Grid.Set(3, 0, tier);
 
             int c = new GreedyFruitMergeAI().ChooseColumn(g);
-            Assert.AreEqual(3, c, "AI should target the column with adjacent same-tier fruit");
+            Assert.IsTrue(c == 2 || c == 3 || c == 4,
+                $"AI should target a column adjacent to the same-tier fruit, got {c}");
         }
 
         [Test]

@@ -108,9 +108,14 @@ namespace MiniGames.Tests.Networking
 
             _hostT.Disconnect(new PeerId("c1"));
 
+            // The reconnect grace window keeps the disconnected slot in the
+            // snapshot with IsConnected=false (so UI can render "reconnecting...").
+            // See RoomManager.ReconnectGrace.
             Assert.IsNotNull(last);
-            Assert.AreEqual(1, last.Players.Count, "client should be removed");
-            Assert.AreEqual("host", last.Players[0].PlayerId);
+            Assert.AreEqual(2, last.Players.Count, "slot stays during grace window");
+            var c1Slot = last.Players.Find(p => p.PlayerId == "c1");
+            Assert.IsNotNull(c1Slot);
+            Assert.IsFalse(c1Slot.IsConnected, "disconnected player flagged offline");
         }
     }
 }

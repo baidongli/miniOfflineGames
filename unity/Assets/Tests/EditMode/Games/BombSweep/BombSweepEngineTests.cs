@@ -66,9 +66,11 @@ namespace MiniGames.Tests.Games.BombSweep
         {
             var s = new BombSweepGameState(playerCount: 1, seed: 1);
             s.SetInput(0, BombDir.None, placeBomb: true);
-            // Tick until it explodes.
+            // Tick until the bomb explodes. The first Step places the bomb
+            // (BombsCount goes 0 -> 1), so checking BombsCount as the loop
+            // condition would skip the loop entirely. Drive on Explosions.
             int safety = 100;
-            while (s.Bombs.Count > 0 && safety-- > 0)
+            while (s.Explosions.Count == 0 && safety-- > 0)
                 BombSweepEngine.Step(s);
             Assert.Greater(s.Explosions.Count, 0, "explosion should have been generated");
             Assert.AreEqual(0, s.Players[0].CurrentBombs, "owner's bomb count should reset on detonation");

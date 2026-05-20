@@ -45,7 +45,8 @@ namespace MiniGames.Tests.Games.NumberMerge
         public void Swipe_with_no_changes_returns_AnyMoved_false()
         {
             var b = new NumberMergeBoard();
-            b.Set(0, 0, 1); b.Set(3, 0, 2);  // 2 _ _ 4 (left already)
+            // Actually-left-collapsed row: [2, 4, _, _]. Swiping left = no-op.
+            b.Set(0, 0, 1); b.Set(1, 0, 2);
             var r = NumberMergeEngine.Swipe(b, SwipeDir.Left);
             Assert.IsFalse(r.AnyMoved);
         }

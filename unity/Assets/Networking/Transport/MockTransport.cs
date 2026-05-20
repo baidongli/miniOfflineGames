@@ -96,9 +96,9 @@ namespace MiniGames.Networking.Transport
             ServiceId = serviceId;
             IsDiscovering = true;
             Role = TransportRole.Client;
-            // Fire endpoint-found for any host already advertising on this service.
-            foreach (var adv in _net.AllAdvertisingWith(serviceId))
-                EndpointFound?.Invoke(new PeerId(adv.Id), adv.DisplayName);
+            // NotifyDiscovererAppeared already fires EndpointFound for every
+            // already-advertising host on this service. (An earlier version
+            // also looped here directly, causing duplicate events.)
             _net.NotifyDiscovererAppeared(this);
         }
 

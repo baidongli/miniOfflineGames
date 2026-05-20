@@ -59,10 +59,10 @@ namespace MiniGames.Games.Snakes.Logic
             {
                 var snake = s.Snakes[i];
                 if (!snake.IsAlive) continue;
-                if (snake.PendingGrowth > 0 && willGrow[i])
+                if (snake.PendingGrowth > 0)
                 {
                     snake.PendingGrowth--;
-                    // Don't drop tail this tick.
+                    // Don't drop tail this tick - snake grows by one cell.
                 }
                 else
                 {

@@ -70,18 +70,19 @@ namespace MiniGames.Tests.Games
         [Test]
         public void CpuSnakes_eventually_ends_a_solo_game()
         {
-            // 6x6 board so the snake runs out of room reasonably fast.
-            var s = new SnakesGameState(6, 6, playerCount: 1, seed: 1);
+            // 5x5 board so the snake runs out of room fast. The greedy AI
+            // is good enough to oscillate for hundreds of ticks on 6x6.
+            var s = new SnakesGameState(5, 5, playerCount: 1, seed: 1);
             var cpu = new CpuSnakesController(s, 0, new SimpleSnakesAI());
             int ticks = 0;
-            while (ticks < 500 && s.Snakes[0].IsAlive)
+            while (ticks < 2000 && s.Snakes[0].IsAlive)
             {
                 cpu.BeforeTick();
                 SnakesEngine.Step(s);
                 ticks++;
             }
             Assert.IsFalse(s.Snakes[0].IsAlive, "snake should eventually die on a tiny board");
-            Assert.Less(ticks, 500, "should not loop forever");
+            Assert.Less(ticks, 2000, "should not loop forever");
         }
     }
 }

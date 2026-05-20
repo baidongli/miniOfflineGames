@@ -2,9 +2,9 @@
     "name": "MiniGames.Games.ColorBlocks",
     "rootNamespace": "MiniGames.Games.ColorBlocks",
     "references": [
-        "MessagePack",
         "MiniGames.GameModule",
-        "MiniGames.Networking"
+        "MiniGames.Networking",
+        "Unity.Nuget.NewtonsoftJson"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

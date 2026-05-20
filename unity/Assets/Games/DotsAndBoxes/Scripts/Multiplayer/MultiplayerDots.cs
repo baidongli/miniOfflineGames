@@ -1,5 +1,4 @@
 using System;
-using MessagePack;
 using MiniGames.Games.DotsAndBoxes.Logic;
 using MiniGames.Networking.Protocol;
 
@@ -11,8 +10,6 @@ namespace MiniGames.Games.DotsAndBoxes.Multiplayer
         Resign  = (byte)MessageType.GameSpecificBase + 1,    // 0x81
         Rematch = (byte)MessageType.GameSpecificBase + 2,    // 0x82
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class DBMoveMessage
     {
         public string PlayerId;
@@ -20,14 +17,10 @@ namespace MiniGames.Games.DotsAndBoxes.Multiplayer
         public int X, Y;
         public int MoveNumber;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class DBResignMessage
     {
         public string PlayerId;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class DBRematchMessage
     {
         public string PlayerId;

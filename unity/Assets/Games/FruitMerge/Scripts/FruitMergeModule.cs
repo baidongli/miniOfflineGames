@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.FruitMerge.Logic;
 using MiniGames.Games.FruitMerge.Multiplayer;
@@ -46,7 +45,7 @@ namespace MiniGames.Games.FruitMerge
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: true);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: true);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -55,13 +54,13 @@ namespace MiniGames.Games.FruitMerge
             switch ((FMMessageType)(byte)type)
             {
                 case FMMessageType.Drop:
-                    _mp.OnDropReceived(MessagePackSerializer.Deserialize<DropMessage>(payload));
+                    _mp.OnDropReceived(Json.Deserialize<DropMessage>(payload));
                     break;
                 case FMMessageType.ProgressUpdate:
-                    _mp.OnProgressReceived(MessagePackSerializer.Deserialize<ProgressMessage>(payload));
+                    _mp.OnProgressReceived(Json.Deserialize<ProgressMessage>(payload));
                     break;
                 case FMMessageType.DiedOut:
-                    _mp.OnDiedOutReceived(MessagePackSerializer.Deserialize<DiedOutMessage>(payload));
+                    _mp.OnDiedOutReceived(Json.Deserialize<DiedOutMessage>(payload));
                     break;
             }
         }

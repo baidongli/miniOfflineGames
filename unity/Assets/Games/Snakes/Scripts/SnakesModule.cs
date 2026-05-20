@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.Snakes.Logic;
 using MiniGames.Games.Snakes.Multiplayer;
@@ -61,13 +60,13 @@ namespace MiniGames.Games.Snakes
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: false);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: false);
         }
 
         private void SendToHost<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.SendToHost(type, MessagePackSerializer.Serialize(body), reliable: false);
+            _ctx.Net.SendToHost(type, Json.Serialize(body), reliable: false);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -76,11 +75,11 @@ namespace MiniGames.Games.Snakes
             switch ((SnakesMessageType)(byte)type)
             {
                 case SnakesMessageType.InputCmd:
-                    var cmd = MessagePackSerializer.Deserialize<SnakeInputCmd>(payload);
+                    var cmd = Json.Deserialize<SnakeInputCmd>(payload);
                     _mp.OnRemoteInput(cmd);
                     break;
                 case SnakesMessageType.Snapshot:
-                    var snap = MessagePackSerializer.Deserialize<SnakeSnapshot>(payload);
+                    var snap = Json.Deserialize<SnakeSnapshot>(payload);
                     _mp.OnSnapshot(snap);
                     break;
             }

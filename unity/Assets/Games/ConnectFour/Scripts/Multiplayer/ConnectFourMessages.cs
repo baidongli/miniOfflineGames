@@ -1,4 +1,3 @@
-using MessagePack;
 using MiniGames.Networking.Protocol;
 
 namespace MiniGames.Games.ConnectFour.Multiplayer
@@ -15,22 +14,16 @@ namespace MiniGames.Games.ConnectFour.Multiplayer
         Resign  = (byte)MessageType.GameSpecificBase + 1,    // 0x81: I give up
         Rematch = (byte)MessageType.GameSpecificBase + 2,    // 0x82: request a new game
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class MoveMessage
     {
         public string PlayerId;
         public int Column;
         public int MoveNumber;   // for de-duplication on reconnect
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class ResignMessage
     {
         public string PlayerId;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class RematchMessage
     {
         public string PlayerId;

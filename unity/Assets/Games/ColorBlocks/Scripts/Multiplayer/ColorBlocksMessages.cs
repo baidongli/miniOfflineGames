@@ -1,4 +1,3 @@
-using MessagePack;
 using MiniGames.Networking.Protocol;
 
 namespace MiniGames.Games.ColorBlocks.Multiplayer
@@ -18,23 +17,18 @@ namespace MiniGames.Games.ColorBlocks.Multiplayer
     /// Sent from a player to all others when their move cleared 2+ lines.
     /// Junk rows = (linesCleared - 1) so single-line clears don't attack.
     /// </summary>
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class AttackMessage
     {
         public string FromPlayerId;
         public int JunkRows;
         public int Seed;            // deterministic gap-column generator for the receiver
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class ProgressMessage
     {
         public string PlayerId;
         public int Score;
         public int CellsFilled;     // for quick "danger" UI
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class DiedOutMessage
     {
         public string PlayerId;

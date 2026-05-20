@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.ConnectFour.Logic;
 using MiniGames.Games.ConnectFour.Multiplayer;
@@ -55,7 +54,7 @@ namespace MiniGames.Games.ConnectFour
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: true);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: true);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -64,13 +63,13 @@ namespace MiniGames.Games.ConnectFour
             switch ((CFMessageType)(byte)type)
             {
                 case CFMessageType.Move:
-                    _mp.OnMoveReceived(MessagePackSerializer.Deserialize<MoveMessage>(payload));
+                    _mp.OnMoveReceived(Json.Deserialize<MoveMessage>(payload));
                     break;
                 case CFMessageType.Resign:
-                    _mp.OnResignReceived(MessagePackSerializer.Deserialize<ResignMessage>(payload));
+                    _mp.OnResignReceived(Json.Deserialize<ResignMessage>(payload));
                     break;
                 case CFMessageType.Rematch:
-                    _mp.OnRematchReceived(MessagePackSerializer.Deserialize<RematchMessage>(payload));
+                    _mp.OnRematchReceived(Json.Deserialize<RematchMessage>(payload));
                     break;
             }
         }

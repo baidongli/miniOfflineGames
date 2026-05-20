@@ -66,7 +66,7 @@ namespace MiniGames.Tests.App.Navigation
             _services = new AppServices
             {
                 Transport = new MockTransport("local", new MockNetwork()),
-                Serializer = new MessagePackMessageSerializer(),
+                Serializer = new JsonMessageSerializer(),
                 LocalPlayerId = "me",
                 LocalDisplayName = "Me",
                 Energy = new EnergyTimer(5, TimeSpan.FromMinutes(15), EnergyState.Fresh(5)),

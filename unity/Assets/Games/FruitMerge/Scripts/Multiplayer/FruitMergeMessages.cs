@@ -1,4 +1,3 @@
-using MessagePack;
 using MiniGames.Networking.Protocol;
 
 namespace MiniGames.Games.FruitMerge.Multiplayer
@@ -9,8 +8,6 @@ namespace MiniGames.Games.FruitMerge.Multiplayer
         ProgressUpdate = (byte)MessageType.GameSpecificBase + 1,    // 0x81
         DiedOut       = (byte)MessageType.GameSpecificBase + 2,     // 0x82
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class DropMessage
     {
         public string PlayerId;
@@ -19,8 +16,6 @@ namespace MiniGames.Games.FruitMerge.Multiplayer
         public int Score;
         public int HighestTier;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class ProgressMessage
     {
         public string PlayerId;
@@ -28,8 +23,6 @@ namespace MiniGames.Games.FruitMerge.Multiplayer
         public int HighestTier;
         public int CellsFilled;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class DiedOutMessage
     {
         public string PlayerId;

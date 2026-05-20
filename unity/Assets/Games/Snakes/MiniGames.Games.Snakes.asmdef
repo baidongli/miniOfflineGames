@@ -2,9 +2,9 @@
     "name": "MiniGames.Games.Snakes",
     "rootNamespace": "MiniGames.Games.Snakes",
     "references": [
-        "MessagePack",
         "MiniGames.GameModule",
-        "MiniGames.Networking"
+        "MiniGames.Networking",
+        "Unity.Nuget.NewtonsoftJson"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

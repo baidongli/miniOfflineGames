@@ -12,7 +12,7 @@ namespace MiniGames.Tests.Networking
         private MockTransport _clientT;
         private RoomManager _hostRoom;
         private RoomManager _clientRoom;
-        private MessagePackMessageSerializer _ser;
+        private JsonMessageSerializer _ser;
 
         [SetUp]
         public void Setup()
@@ -20,7 +20,7 @@ namespace MiniGames.Tests.Networking
             _net = new MockNetwork();
             _hostT = new MockTransport("host", _net);
             _clientT = new MockTransport("c1", _net);
-            _ser = new MessagePackMessageSerializer();
+            _ser = new JsonMessageSerializer();
             _hostRoom = new RoomManager(_hostT, _ser, localPlayerId: "host", localDisplayName: "Host");
             _clientRoom = new RoomManager(_clientT, _ser, localPlayerId: "c1", localDisplayName: "Bob");
         }

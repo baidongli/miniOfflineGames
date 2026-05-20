@@ -2,9 +2,9 @@
     "name": "MiniGames.Games.Reversi",
     "rootNamespace": "MiniGames.Games.Reversi",
     "references": [
-        "MessagePack",
         "MiniGames.GameModule",
-        "MiniGames.Networking"
+        "MiniGames.Networking",
+        "Unity.Nuget.NewtonsoftJson"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

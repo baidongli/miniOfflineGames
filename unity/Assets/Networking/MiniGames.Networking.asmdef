@@ -2,8 +2,8 @@
     "name": "MiniGames.Networking",
     "rootNamespace": "MiniGames.Networking",
     "references": [
-        "MessagePack",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.Nuget.NewtonsoftJson"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

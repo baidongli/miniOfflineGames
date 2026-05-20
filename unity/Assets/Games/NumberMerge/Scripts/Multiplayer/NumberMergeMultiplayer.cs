@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using MessagePack;
 using MiniGames.Games.NumberMerge.Logic;
 using MiniGames.Networking.Protocol;
 
@@ -12,8 +11,6 @@ namespace MiniGames.Games.NumberMerge.Multiplayer
         DiedOut  = (byte)MessageType.GameSpecificBase + 1,    // 0x81
         ReachedGoal = (byte)MessageType.GameSpecificBase + 2, // 0x82
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class NMProgressMessage
     {
         public string PlayerId;
@@ -21,16 +18,12 @@ namespace MiniGames.Games.NumberMerge.Multiplayer
         public byte MaxExponent;
         public int Swipes;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class NMDiedOutMessage
     {
         public string PlayerId;
         public int FinalScore;
         public byte FinalMaxExponent;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class NMReachedGoalMessage
     {
         public string PlayerId;

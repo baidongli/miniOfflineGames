@@ -20,7 +20,7 @@ namespace MiniGames.Tests.Networking
             BuildPlayer(string id, string name, MockNetwork net)
         {
             var transport = new MockTransport(id, net);
-            var ser = new MessagePackMessageSerializer();
+            var ser = new JsonMessageSerializer();
             var room = new RoomManager(transport, ser, id, name);
             var mod = new ColorBlocksModule();
             var ctx = new GameContext(

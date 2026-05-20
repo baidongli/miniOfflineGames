@@ -2,9 +2,9 @@
     "name": "MiniGames.Games.NumberMerge",
     "rootNamespace": "MiniGames.Games.NumberMerge",
     "references": [
-        "MessagePack",
         "MiniGames.GameModule",
-        "MiniGames.Networking"
+        "MiniGames.Networking",
+        "Unity.Nuget.NewtonsoftJson"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

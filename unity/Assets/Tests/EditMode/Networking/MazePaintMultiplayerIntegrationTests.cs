@@ -14,7 +14,7 @@ namespace MiniGames.Tests.Networking
             BuildPlayer(string id, string name, MockNetwork net)
         {
             var t = new MockTransport(id, net);
-            var ser = new MessagePackMessageSerializer();
+            var ser = new JsonMessageSerializer();
             var room = new RoomManager(t, ser, id, name);
             var mod = new MazePaintModule();
             var ctx = new GameContext(null, null, null, null,

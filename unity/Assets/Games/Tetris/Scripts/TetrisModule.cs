@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.Tetris.Logic;
 using MiniGames.Games.Tetris.Multiplayer;
@@ -53,7 +52,7 @@ namespace MiniGames.Games.Tetris
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: true);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: true);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -62,13 +61,13 @@ namespace MiniGames.Games.Tetris
             switch ((TetrisMessageType)(byte)type)
             {
                 case TetrisMessageType.Attack:
-                    _mp.OnAttackReceived(MessagePackSerializer.Deserialize<TetrisAttackMessage>(payload));
+                    _mp.OnAttackReceived(Json.Deserialize<TetrisAttackMessage>(payload));
                     break;
                 case TetrisMessageType.ProgressUpdate:
-                    _mp.OnProgressReceived(MessagePackSerializer.Deserialize<TetrisProgressMessage>(payload));
+                    _mp.OnProgressReceived(Json.Deserialize<TetrisProgressMessage>(payload));
                     break;
                 case TetrisMessageType.DiedOut:
-                    _mp.OnDiedOutReceived(MessagePackSerializer.Deserialize<TetrisDiedOutMessage>(payload));
+                    _mp.OnDiedOutReceived(Json.Deserialize<TetrisDiedOutMessage>(payload));
                     break;
             }
         }

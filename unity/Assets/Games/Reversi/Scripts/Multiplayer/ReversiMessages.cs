@@ -1,4 +1,3 @@
-using MessagePack;
 using MiniGames.Networking.Protocol;
 
 namespace MiniGames.Games.Reversi.Multiplayer
@@ -10,29 +9,21 @@ namespace MiniGames.Games.Reversi.Multiplayer
         Resign  = (byte)MessageType.GameSpecificBase + 2,    // 0x82
         Rematch = (byte)MessageType.GameSpecificBase + 3,    // 0x83
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class RVMoveMessage
     {
         public string PlayerId;
         public int X, Y;
         public int MoveNumber;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class RVPassMessage
     {
         public string PlayerId;
         public int MoveNumber;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class RVResignMessage
     {
         public string PlayerId;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class RVRematchMessage
     {
         public string PlayerId;

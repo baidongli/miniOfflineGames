@@ -5,10 +5,10 @@ namespace MiniGames.Tests.Protocol
 {
     public class MessageSerializerTests
     {
-        private MessagePackMessageSerializer _ser;
+        private JsonMessageSerializer _ser;
 
         [SetUp]
-        public void Setup() => _ser = new MessagePackMessageSerializer();
+        public void Setup() => _ser = new JsonMessageSerializer();
 
         [Test]
         public void Hello_round_trips()

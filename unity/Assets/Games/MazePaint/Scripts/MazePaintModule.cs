@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.MazePaint.Logic;
 using MiniGames.Games.MazePaint.Multiplayer;
@@ -60,13 +59,13 @@ namespace MiniGames.Games.MazePaint
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: false);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: false);
         }
 
         private void SendToHost<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.SendToHost(type, MessagePackSerializer.Serialize(body), reliable: false);
+            _ctx.Net.SendToHost(type, Json.Serialize(body), reliable: false);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -75,10 +74,10 @@ namespace MiniGames.Games.MazePaint
             switch ((MazeMessageType)(byte)type)
             {
                 case MazeMessageType.InputCmd:
-                    _mp.OnRemoteInput(MessagePackSerializer.Deserialize<MazeInputCmd>(payload));
+                    _mp.OnRemoteInput(Json.Deserialize<MazeInputCmd>(payload));
                     break;
                 case MazeMessageType.Snapshot:
-                    _mp.OnSnapshot(MessagePackSerializer.Deserialize<MazeSnapshot>(payload));
+                    _mp.OnSnapshot(Json.Deserialize<MazeSnapshot>(payload));
                     break;
             }
         }

@@ -25,7 +25,7 @@ namespace MiniGames.Tests.Networking
             BuildPlayer(string playerId, string displayName, MockNetwork net, bool isHost)
         {
             var transport = new MockTransport(playerId, net);
-            var ser = new MessagePackMessageSerializer();
+            var ser = new JsonMessageSerializer();
             var room = new RoomManager(transport, ser, playerId, displayName);
 
             var mod = new SnakesModule();

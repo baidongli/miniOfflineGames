@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using MessagePack;
 using MiniGames.Networking.Protocol;
 
 namespace MiniGames.Games.MazePaint.Multiplayer
@@ -9,16 +8,12 @@ namespace MiniGames.Games.MazePaint.Multiplayer
         InputCmd = (byte)MessageType.GameSpecificBase,         // 0x80 client -> host
         Snapshot = (byte)MessageType.GameSpecificBase + 1,     // 0x81 host -> clients
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class MazeInputCmd
     {
         public int PlayerIndex;
         public int ClientTick;
         public byte NewDirection;
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class MazeSnapshot
     {
         public int Tick;
@@ -27,8 +22,6 @@ namespace MiniGames.Games.MazePaint.Multiplayer
         public byte[] TrailBytes;
         public List<MazePlayerWire> Players = new List<MazePlayerWire>();
     }
-
-    [MessagePackObject(keyAsPropertyName: true)]
     public sealed class MazePlayerWire
     {
         public int Index;

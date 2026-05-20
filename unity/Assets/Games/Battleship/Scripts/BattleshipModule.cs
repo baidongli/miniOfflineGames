@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.Battleship.Logic;
 using MiniGames.Games.Battleship.Multiplayer;
@@ -49,7 +48,7 @@ namespace MiniGames.Games.Battleship
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: true);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: true);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -58,16 +57,16 @@ namespace MiniGames.Games.Battleship
             switch ((BTLMessageType)(byte)type)
             {
                 case BTLMessageType.ShipsReady:
-                    _mp.OnShipsReadyReceived(MessagePackSerializer.Deserialize<BTLShipsReadyMessage>(payload));
+                    _mp.OnShipsReadyReceived(Json.Deserialize<BTLShipsReadyMessage>(payload));
                     break;
                 case BTLMessageType.ShotFired:
-                    _mp.OnShotFiredReceived(MessagePackSerializer.Deserialize<BTLShotFiredMessage>(payload));
+                    _mp.OnShotFiredReceived(Json.Deserialize<BTLShotFiredMessage>(payload));
                     break;
                 case BTLMessageType.ShotResult:
-                    _mp.OnShotResultReceived(MessagePackSerializer.Deserialize<BTLShotResultMessage>(payload));
+                    _mp.OnShotResultReceived(Json.Deserialize<BTLShotResultMessage>(payload));
                     break;
                 case BTLMessageType.Resign:
-                    _mp.OnResignReceived(MessagePackSerializer.Deserialize<BTLResignMessage>(payload));
+                    _mp.OnResignReceived(Json.Deserialize<BTLResignMessage>(payload));
                     break;
             }
         }

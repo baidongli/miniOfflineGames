@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.NumberMerge.Logic;
 using MiniGames.Games.NumberMerge.Multiplayer;
@@ -45,7 +44,7 @@ namespace MiniGames.Games.NumberMerge
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: true);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: true);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -54,13 +53,13 @@ namespace MiniGames.Games.NumberMerge
             switch ((NMMessageType)(byte)type)
             {
                 case NMMessageType.Progress:
-                    _mp.OnProgressReceived(MessagePackSerializer.Deserialize<NMProgressMessage>(payload));
+                    _mp.OnProgressReceived(Json.Deserialize<NMProgressMessage>(payload));
                     break;
                 case NMMessageType.DiedOut:
-                    _mp.OnDiedOutReceived(MessagePackSerializer.Deserialize<NMDiedOutMessage>(payload));
+                    _mp.OnDiedOutReceived(Json.Deserialize<NMDiedOutMessage>(payload));
                     break;
                 case NMMessageType.ReachedGoal:
-                    _mp.OnReachedGoalReceived(MessagePackSerializer.Deserialize<NMReachedGoalMessage>(payload));
+                    _mp.OnReachedGoalReceived(Json.Deserialize<NMReachedGoalMessage>(payload));
                     break;
             }
         }

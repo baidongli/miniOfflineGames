@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.DotsAndBoxes.Logic;
 using MiniGames.Games.DotsAndBoxes.Multiplayer;
@@ -47,7 +46,7 @@ namespace MiniGames.Games.DotsAndBoxes
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: true);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: true);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -56,13 +55,13 @@ namespace MiniGames.Games.DotsAndBoxes
             switch ((DBMessageType)(byte)type)
             {
                 case DBMessageType.Move:
-                    _mp.OnMoveReceived(MessagePackSerializer.Deserialize<DBMoveMessage>(payload));
+                    _mp.OnMoveReceived(Json.Deserialize<DBMoveMessage>(payload));
                     break;
                 case DBMessageType.Resign:
-                    _mp.OnResignReceived(MessagePackSerializer.Deserialize<DBResignMessage>(payload));
+                    _mp.OnResignReceived(Json.Deserialize<DBResignMessage>(payload));
                     break;
                 case DBMessageType.Rematch:
-                    _mp.OnRematchReceived(MessagePackSerializer.Deserialize<DBRematchMessage>(payload));
+                    _mp.OnRematchReceived(Json.Deserialize<DBRematchMessage>(payload));
                     break;
             }
         }

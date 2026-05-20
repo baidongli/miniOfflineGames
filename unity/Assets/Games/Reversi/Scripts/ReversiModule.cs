@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.Reversi.Logic;
 using MiniGames.Games.Reversi.Multiplayer;
@@ -49,7 +48,7 @@ namespace MiniGames.Games.Reversi
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            _ctx.Net.Broadcast(type, MessagePackSerializer.Serialize(body), reliable: true);
+            _ctx.Net.Broadcast(type, Json.Serialize(body), reliable: true);
         }
 
         public void OnPeerMessage(PeerId from, MessageType type, ArraySegment<byte> payload)
@@ -58,16 +57,16 @@ namespace MiniGames.Games.Reversi
             switch ((RVMessageType)(byte)type)
             {
                 case RVMessageType.Move:
-                    _mp.OnMoveReceived(MessagePackSerializer.Deserialize<RVMoveMessage>(payload));
+                    _mp.OnMoveReceived(Json.Deserialize<RVMoveMessage>(payload));
                     break;
                 case RVMessageType.Pass:
-                    _mp.OnPassReceived(MessagePackSerializer.Deserialize<RVPassMessage>(payload));
+                    _mp.OnPassReceived(Json.Deserialize<RVPassMessage>(payload));
                     break;
                 case RVMessageType.Resign:
-                    _mp.OnResignReceived(MessagePackSerializer.Deserialize<RVResignMessage>(payload));
+                    _mp.OnResignReceived(Json.Deserialize<RVResignMessage>(payload));
                     break;
                 case RVMessageType.Rematch:
-                    _mp.OnRematchReceived(MessagePackSerializer.Deserialize<RVRematchMessage>(payload));
+                    _mp.OnRematchReceived(Json.Deserialize<RVRematchMessage>(payload));
                     break;
             }
         }

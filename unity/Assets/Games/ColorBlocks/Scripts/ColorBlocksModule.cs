@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using MessagePack;
 using MiniGames.GameModule;
 using MiniGames.Games.ColorBlocks.Logic;
 using MiniGames.Games.ColorBlocks.Multiplayer;
@@ -60,7 +59,7 @@ namespace MiniGames.Games.ColorBlocks
         private void Send<T>(MessageType type, T body)
         {
             if (_ctx?.Net == null) return;
-            var bytes = MessagePackSerializer.Serialize(body);
+            var bytes = Json.Serialize(body);
             _ctx.Net.Broadcast(type, bytes, reliable: true);
         }
 
@@ -71,15 +70,15 @@ namespace MiniGames.Games.ColorBlocks
             switch (cb)
             {
                 case CBMessageType.Attack:
-                    var atk = MessagePackSerializer.Deserialize<AttackMessage>(payload);
+                    var atk = Json.Deserialize<AttackMessage>(payload);
                     _mp.OnAttackReceived(atk);
                     break;
                 case CBMessageType.ProgressUpdate:
-                    var prog = MessagePackSerializer.Deserialize<ProgressMessage>(payload);
+                    var prog = Json.Deserialize<ProgressMessage>(payload);
                     _mp.OnProgressReceived(prog);
                     break;
                 case CBMessageType.DiedOut:
-                    var died = MessagePackSerializer.Deserialize<DiedOutMessage>(payload);
+                    var died = Json.Deserialize<DiedOutMessage>(payload);
                     _mp.OnDiedOutReceived(died);
                     break;
             }

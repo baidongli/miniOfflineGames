@@ -20,7 +20,7 @@ namespace MiniGames.Tests.Networking
             _net = new MockNetwork();
             _hostT = new MockTransport("host", _net);
             _clientT = new MockTransport("c1", _net);
-            var ser = new MessagePackMessageSerializer();
+            var ser = new JsonMessageSerializer();
             _host = new RoomManager(_hostT, ser, "host", "Host", now: () => _now);
             _host.ReconnectGrace = TimeSpan.FromSeconds(10);
             _client = new RoomManager(_clientT, ser, "c1", "Bob", now: () => _now);

@@ -2,7 +2,7 @@
 
 A collection of offline mini-games for iOS and Android, supporting solo,
 same-device (1-4 player split screen), and Nearby Connections (1-4 player
-local wireless) modes. Built in Unity 2022.3 LTS.
+local wireless) modes. Built in Unity 6 LTS (6000.0.75f1).
 
 ## Repository Layout
 

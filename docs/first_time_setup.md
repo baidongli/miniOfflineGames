@@ -16,8 +16,8 @@ committed and CI works from then on.
 
 ## Steps
 
-1. Install **Unity 2022.3.40f1** via Unity Hub. Include Android Build
-   Support + iOS Build Support modules.
+1. Install **Unity 6000.0.75f1** (Unity 6 LTS) via Unity Hub. Include
+   Android Build Support + iOS Build Support modules.
 2. Open Unity Hub → "Add project from disk" → pick `unity/` in this repo.
 3. Unity creates `Library/`, `Temp/`, and the rest of `ProjectSettings/`
    automatically. Wait for the import to complete.

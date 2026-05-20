@@ -38,7 +38,7 @@ Pre-alpha. Code complete; awaiting first Unity Editor open to generate
 
 ## Stack
 
-- Unity 2022.3.40f1
+- Unity 6 LTS (6000.0.75f1)
 - MessagePack-CSharp for wire serialization
 - Google Nearby Connections SDK (Android Play Services / iOS Pod)
 - UniTask for async
@@ -70,7 +70,7 @@ miniOfflineGames/
 
 See `docs/first_time_setup.md`. Short version:
 
-1. Install Unity 2022.3.40f1 (Hub → 2022 LTS) with Android + iOS modules.
+1. Install Unity 6 LTS (6000.0.75f1) via Hub with Android + iOS modules.
 2. Open `unity/` in Unity Hub; Unity generates `ProjectSettings/` + `Library/`.
 3. Commit the generated `ProjectSettings/` files.
 4. Add CI secrets (`UNITY_LICENSE`, `UNITY_EMAIL`, `UNITY_PASSWORD`).

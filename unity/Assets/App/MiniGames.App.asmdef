@@ -13,6 +13,7 @@
         "MiniGames.Games.BombSweep",
         "MiniGames.Games.Reversi",
         "MiniGames.Games.NumberMerge",
+        "MiniGames.Games.DotsAndBoxes",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

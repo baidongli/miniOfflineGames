@@ -15,7 +15,8 @@
         "MiniGames.Games.ConnectFour",
         "MiniGames.Games.BombSweep",
         "MiniGames.Games.Reversi",
-        "MiniGames.Games.NumberMerge"
+        "MiniGames.Games.NumberMerge",
+        "MiniGames.Games.DotsAndBoxes"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

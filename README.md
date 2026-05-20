@@ -22,6 +22,7 @@ A collection of polished offline mini-games for iOS and Android. Every game supp
 | **Bomb Sweep** | ✓ | ✓ | ✓ | 4-player realtime arena: drop bombs, dodge blasts, last alive wins |
 | **Reversi** | ✓ | ✓ | ✓ | 2-player Othello with positional minimax AI |
 | **2048** | ✓ |   | ✓ | Slide-and-merge tile puzzle; race to 2048 |
+| **Dots and Boxes** | ✓ | ✓ | ✓ | Turn-based 2-4 players, complete a box = bonus turn |
 
 ## Project status
 

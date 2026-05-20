@@ -3,7 +3,9 @@ using MiniGames.App.Shared.Analytics;
 using MiniGames.App.Shared.Audio;
 using MiniGames.App.Shared.Energy;
 using MiniGames.App.Shared.Haptics;
+using MiniGames.App.Shared.HighScores;
 using MiniGames.App.Shared.SaveSystem;
+using MiniGames.App.Shared.Settings;
 using MiniGames.GameModule;
 using MiniGames.Networking.Protocol;
 using MiniGames.Networking.Session;
@@ -35,6 +37,13 @@ namespace MiniGames.App.Bootstrap
             var haptics = ChoosePlatformHaptics();
             var audio = gameObject.AddComponent<AudioBus>();
             var energy = BuildEnergyTimer(save);
+            var settings = new SettingsService(save);
+            var highScores = new HighScoresService(save);
+
+            // First-launch: seed the SettingsService's DisplayName from
+            // the device-local persisted name so the user doesn't see "".
+            if (string.IsNullOrEmpty(settings.Current.DisplayName))
+                settings.Update(s => s.DisplayName = LoadOrCreateDisplayName());
 
             Services = new AppServices
             {
@@ -45,8 +54,10 @@ namespace MiniGames.App.Bootstrap
                 Haptics = haptics,
                 Audio = audio,
                 Energy = energy,
+                Settings = settings,
+                HighScores = highScores,
                 LocalPlayerId = LoadOrCreatePlayerId(),
-                LocalDisplayName = LoadOrCreateDisplayName()
+                LocalDisplayName = settings.Current.DisplayName
             };
 
             Debug.Log($"[Boot] {GameRegistry.All.Count} games registered. " +
@@ -128,6 +139,8 @@ namespace MiniGames.App.Bootstrap
         public IHaptics Haptics;
         public IAudio Audio;
         public EnergyTimer Energy;
+        public SettingsService Settings;
+        public HighScoresService HighScores;
         public string LocalPlayerId;
         public string LocalDisplayName;
     }

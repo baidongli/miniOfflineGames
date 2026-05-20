@@ -2,6 +2,7 @@
     "name": "MiniGames.Games.DotsAndBoxes",
     "rootNamespace": "MiniGames.Games.DotsAndBoxes",
     "references": [
+        "MessagePack",
         "MiniGames.GameModule",
         "MiniGames.Networking"
     ],

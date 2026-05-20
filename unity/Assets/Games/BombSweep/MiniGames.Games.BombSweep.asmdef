@@ -2,6 +2,7 @@
     "name": "MiniGames.Games.BombSweep",
     "rootNamespace": "MiniGames.Games.BombSweep",
     "references": [
+        "MessagePack",
         "MiniGames.GameModule",
         "MiniGames.Networking"
     ],

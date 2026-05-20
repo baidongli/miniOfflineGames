@@ -2,6 +2,7 @@
     "name": "MiniGames.Games.FruitMerge",
     "rootNamespace": "MiniGames.Games.FruitMerge",
     "references": [
+        "MessagePack",
         "MiniGames.GameModule",
         "MiniGames.Networking"
     ],

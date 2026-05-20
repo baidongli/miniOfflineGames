@@ -2,6 +2,7 @@
     "name": "MiniGames.Games.MazePaint",
     "rootNamespace": "MiniGames.Games.MazePaint",
     "references": [
+        "MessagePack",
         "MiniGames.GameModule",
         "MiniGames.Networking"
     ],

@@ -2,6 +2,7 @@
     "name": "MiniGames.Games.ConnectFour",
     "rootNamespace": "MiniGames.Games.ConnectFour",
     "references": [
+        "MessagePack",
         "MiniGames.GameModule",
         "MiniGames.Networking"
     ],

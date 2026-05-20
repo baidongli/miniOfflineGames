@@ -2,6 +2,7 @@
     "name": "MiniGames.Networking",
     "rootNamespace": "MiniGames.Networking",
     "references": [
+        "MessagePack",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

@@ -2,6 +2,7 @@
     "name": "MiniGames.Games.Battleship",
     "rootNamespace": "MiniGames.Games.Battleship",
     "references": [
+        "MessagePack",
         "MiniGames.GameModule",
         "MiniGames.Networking"
     ],

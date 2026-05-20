@@ -4,6 +4,7 @@ using MiniGames.App.Shared.Audio;
 using MiniGames.App.Shared.Energy;
 using MiniGames.App.Shared.Haptics;
 using MiniGames.App.Shared.HighScores;
+using MiniGames.App.Shared.Localization;
 using MiniGames.App.Shared.SaveSystem;
 using MiniGames.App.Shared.Settings;
 using MiniGames.GameModule;
@@ -39,6 +40,8 @@ namespace MiniGames.App.Bootstrap
             var energy = BuildEnergyTimer(save);
             var settings = new SettingsService(save);
             var highScores = new HighScoresService(save);
+            var localization = new LocalizationService(settings);
+            L10n.Active = localization;
 
             // First-launch: seed the SettingsService's DisplayName from
             // the device-local persisted name so the user doesn't see "".
@@ -56,6 +59,7 @@ namespace MiniGames.App.Bootstrap
                 Energy = energy,
                 Settings = settings,
                 HighScores = highScores,
+                Localization = localization,
                 LocalPlayerId = LoadOrCreatePlayerId(),
                 LocalDisplayName = settings.Current.DisplayName
             };
@@ -141,6 +145,7 @@ namespace MiniGames.App.Bootstrap
         public EnergyTimer Energy;
         public SettingsService Settings;
         public HighScoresService HighScores;
+        public LocalizationService Localization;
         public string LocalPlayerId;
         public string LocalDisplayName;
     }

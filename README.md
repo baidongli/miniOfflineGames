@@ -19,6 +19,7 @@ A collection of polished offline mini-games for iOS and Android. Every game supp
 | **Maze Paint** | ✓ | ✓ | ✓ | Paper.io-style territory grab with flood-fill capture |
 | **Fruit Merge** | ✓ |   | ✓ | Grid drop-and-collapse with chain merges |
 | **Connect Four** | ✓ | ✓ | ✓ | Turn-based 2-player classic, 4-in-a-row to win |
+| **Bomb Sweep** | ✓ | ✓ | ✓ | 4-player realtime arena: drop bombs, dodge blasts, last alive wins |
 
 ## Project status
 

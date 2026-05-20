@@ -10,6 +10,7 @@
         "MiniGames.Games.MazePaint",
         "MiniGames.Games.Tetris",
         "MiniGames.Games.ConnectFour",
+        "MiniGames.Games.BombSweep",
         "Unity.TextMeshPro"
     ],
     "includePlatforms": [],

@@ -12,7 +12,8 @@
         "MiniGames.Games.FruitMerge",
         "MiniGames.Games.MazePaint",
         "MiniGames.Games.Tetris",
-        "MiniGames.Games.ConnectFour"
+        "MiniGames.Games.ConnectFour",
+        "MiniGames.Games.BombSweep"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

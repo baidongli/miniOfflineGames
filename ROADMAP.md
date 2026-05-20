@@ -31,6 +31,10 @@ shared services) and what's left to ship a playable build.
 
 The very first time the project opens in Unity 6 LTS:
 
+0. **Pre-flight** (optional, 1 second): `bash scripts/verify_repo.sh`.
+   Checks that every game's asmdef + module + tests + registry entries
+   line up. If this fails, fix the structural issue before bothering
+   Unity with it.
 1. Unity Hub → Open Project → pick `unity/`. Unity generates
    `Library/`, `Temp/`, and the rest of `ProjectSettings/`.
 2. Check the Console for any compilation errors. Likely candidates:

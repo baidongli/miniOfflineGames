@@ -82,6 +82,19 @@ Top-level reading order for a new contributor:
 6. `docs/multiplayer_patterns.md` — pick the right sync model for new games.
 ```
 
+## Quick sanity check
+
+Before opening Unity, you can validate the repo's structure:
+
+```bash
+bash scripts/verify_repo.sh
+```
+
+Runs ~83 static checks (every game has Logic/Multiplayer/AI folders +
+asmdef + module, every game is referenced in App.asmdef + Tests.asmdef
++ GameRegistry, no game depends on another game or on App, CI
+workflows present, etc.). Exit 0 = good to go.
+
 ## First-time setup
 
 See `docs/first_time_setup.md`. Short version:

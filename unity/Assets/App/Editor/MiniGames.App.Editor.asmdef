@@ -1,0 +1,20 @@
+{
+    "name": "MiniGames.App.Editor",
+    "rootNamespace": "MiniGames.App.Editor",
+    "references": [
+        "MiniGames.App",
+        "MiniGames.GameModule",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

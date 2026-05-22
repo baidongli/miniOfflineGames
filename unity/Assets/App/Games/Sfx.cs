@@ -13,11 +13,19 @@ namespace MiniGames.App.Games
     public static class Sfx
     {
         private const int Rate = 44100;
+        private const string MuteKey = "sfx_muted";
         private static AudioSource _src;
         private static Dictionary<string, AudioClip> _clips;
 
+        public static bool Muted
+        {
+            get => PlayerPrefs.GetInt(MuteKey, 0) == 1;
+            set => PlayerPrefs.SetInt(MuteKey, value ? 1 : 0);
+        }
+
         public static void Play(string id, float volume = 0.6f)
         {
+            if (Muted) return;
             Ensure();
             if (_clips.TryGetValue(id, out var clip)) _src.PlayOneShot(clip, volume);
         }

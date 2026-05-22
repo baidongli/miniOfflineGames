@@ -34,6 +34,17 @@ namespace MiniGames.App.Hub
                 _modeSelect.gameObject.SetActive(false);
                 _modeSelect.ModeChosen += OnModeChosen;
             }
+            RenderEnergy();
+        }
+
+        private void RenderEnergy()
+        {
+            if (_energyBar == null) return;
+            var energy = AppBootstrap.Services?.Energy;
+            if (energy != null)
+                _energyBar.Render(energy.Current(System.DateTimeOffset.UtcNow), energy.Max);
+            else
+                _energyBar.Render(5, 5); // Boot didn't run (e.g. playing Hub directly)
         }
 
         private void BuildGameGrid()
@@ -79,10 +90,7 @@ namespace MiniGames.App.Hub
             Debug.Log($"[Hub] {module.DisplayName} / {mode} not implemented yet");
         }
 
-        private void OnMenu()
-        {
-            // TODO: settings / about / restore purchases
-        }
+        private void OnMenu() => SettingsOverlay.Show();
 
         private void OnRemoveAds()
         {

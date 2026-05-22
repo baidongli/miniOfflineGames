@@ -34,9 +34,11 @@ namespace MiniGames.App.Games
         private IConnectFourAI _ai;
         private Image[,] _cells;
         private bool _busy;
+        private bool _vsCpu;
 
         private void Start()
         {
+            _vsCpu = !GameLaunch.SameDevice;
             _module = new ConnectFourModule();
             _module.StartSolo(BuildContext());
             _game = _module.SoloGame;
@@ -90,10 +92,11 @@ namespace MiniGames.App.Games
         private void OnColumnTapped(int column)
         {
             if (_busy || _game.IsGameOver) return;
-            if (_game.CurrentPlayer != ConnectFourBoard.PlayerA) return; // human is A
+            // Solo: only the human seat (A) taps. Same-device: either seat taps.
+            if (_vsCpu && _game.CurrentPlayer != ConnectFourBoard.PlayerA) return;
             if (!_game.TryPlay(column, out _)) return;
             Sfx.Play("place");
-            if (!_game.IsGameOver && _game.CurrentPlayer == ConnectFourBoard.PlayerB)
+            if (_vsCpu && !_game.IsGameOver && _game.CurrentPlayer == ConnectFourBoard.PlayerB)
                 StartCoroutine(AiMove());
         }
 
@@ -119,25 +122,40 @@ namespace MiniGames.App.Games
                                        : SlotEmpty;
                 }
             if (_status != null) _status.text = StatusText();
-            if (_game.IsGameOver)
-                GameOverlay.Show(StatusText(),
-                    _game.Result == GameResult.PlayerAWins ? GameOverlay.Outcome.Win
-                    : _game.Result == GameResult.PlayerBWins ? GameOverlay.Outcome.Lose
-                    : GameOverlay.Outcome.Neutral);
+            if (_game.IsGameOver) GameOverlay.Show(StatusText(), ResultOutcome());
+        }
+
+        private GameOverlay.Outcome ResultOutcome()
+        {
+            if (_game.Result == GameResult.Draw) return GameOverlay.Outcome.Neutral;
+            if (!_vsCpu) return GameOverlay.Outcome.Win; // someone won (hot-seat)
+            return _game.Result == GameResult.PlayerAWins
+                ? GameOverlay.Outcome.Win : GameOverlay.Outcome.Lose;
         }
 
         private string StatusText()
         {
+            if (_vsCpu)
+            {
+                switch (_game.Result)
+                {
+                    case GameResult.PlayerAWins: return "You win!";
+                    case GameResult.PlayerBWins: return "Computer wins";
+                    case GameResult.Draw: return "Draw";
+                    default:
+                        return _busy ? "Computer thinking..."
+                             : _game.CurrentPlayer == ConnectFourBoard.PlayerA
+                                ? "Your turn (red)" : "Computer's turn";
+                }
+            }
             switch (_game.Result)
             {
-                case GameResult.PlayerAWins: return "You win!";
-                case GameResult.PlayerBWins: return "Computer wins";
+                case GameResult.PlayerAWins: return "Red wins!";
+                case GameResult.PlayerBWins: return "Yellow wins!";
                 case GameResult.Draw: return "Draw";
                 default:
-                    return _busy ? "Computer thinking..."
-                         : _game.CurrentPlayer == ConnectFourBoard.PlayerA
-                            ? "Your turn (red)"
-                            : "Computer's turn";
+                    return _game.CurrentPlayer == ConnectFourBoard.PlayerA
+                        ? "Red's turn" : "Yellow's turn";
             }
         }
     }

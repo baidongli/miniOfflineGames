@@ -36,9 +36,11 @@ namespace MiniGames.App.Games
         private IReversiAI _ai;
         private Image[,] _cells;
         private bool _busy;
+        private bool _vsCpu;
 
         private void Start()
         {
+            _vsCpu = !GameLaunch.SameDevice;
             _module = new ReversiModule();
             _module.StartSolo(BuildContext());
             _game = _module.SoloGame;
@@ -93,10 +95,11 @@ namespace MiniGames.App.Games
         private void OnCellTapped(int x, int y)
         {
             if (_busy || _game.IsGameOver) return;
-            if (_game.CurrentPlayer != ReversiBoard.Black) return; // human is Black
+            // Solo: only Black (human) taps. Same-device: either colour taps.
+            if (_vsCpu && _game.CurrentPlayer != ReversiBoard.Black) return;
             if (!_game.TryPlay(x, y, out _)) return;               // illegal -> ignore
             Sfx.Play("place");
-            if (!_game.IsGameOver && _game.CurrentPlayer == ReversiBoard.White)
+            if (_vsCpu && !_game.IsGameOver && _game.CurrentPlayer == ReversiBoard.White)
                 StartCoroutine(AiLoop());
             else
                 Render();
@@ -120,9 +123,10 @@ namespace MiniGames.App.Games
 
         private void Render()
         {
-            bool humanTurn = !_game.IsGameOver
-                && !_busy
-                && _game.CurrentPlayer == ReversiBoard.Black;
+            // Show legal-move hints whenever a human is on the clock: in solo
+            // that's Black only; in same-device it's whoever's turn it is.
+            bool showHints = !_game.IsGameOver && !_busy
+                && (!_vsCpu || _game.CurrentPlayer == ReversiBoard.Black);
 
             for (int y = 0; y < N; y++)
                 for (int x = 0; x < N; x++)
@@ -133,16 +137,20 @@ namespace MiniGames.App.Games
                     else _cells[x, y].color = Felt;
                 }
 
-            if (humanTurn)
-                foreach (var (lx, ly) in _game.Board.LegalMoves(ReversiBoard.Black))
+            if (showHints)
+                foreach (var (lx, ly) in _game.Board.LegalMoves(_game.CurrentPlayer))
                     _cells[lx, ly].color = FeltHint;
 
             if (_status != null) _status.text = StatusText();
-            if (_game.IsGameOver)
-                GameOverlay.Show(StatusText(),
-                    _game.Result == ReversiResult.BlackWins ? GameOverlay.Outcome.Win
-                    : _game.Result == ReversiResult.WhiteWins ? GameOverlay.Outcome.Lose
-                    : GameOverlay.Outcome.Neutral);
+            if (_game.IsGameOver) GameOverlay.Show(StatusText(), ResultOutcome());
+        }
+
+        private GameOverlay.Outcome ResultOutcome()
+        {
+            if (_game.Result == ReversiResult.Draw) return GameOverlay.Outcome.Neutral;
+            if (!_vsCpu) return GameOverlay.Outcome.Win;
+            return _game.Result == ReversiResult.BlackWins
+                ? GameOverlay.Outcome.Win : GameOverlay.Outcome.Lose;
         }
 
         private string StatusText()
@@ -150,13 +158,25 @@ namespace MiniGames.App.Games
             int b = _game.Board.Count(ReversiBoard.Black);
             int w = _game.Board.Count(ReversiBoard.White);
             string score = $"   Black {b} : {w} White";
+            if (_vsCpu)
+            {
+                switch (_game.Result)
+                {
+                    case ReversiResult.BlackWins: return "You win!" + score;
+                    case ReversiResult.WhiteWins: return "Computer wins" + score;
+                    case ReversiResult.Draw: return "Draw" + score;
+                    default:
+                        return (_busy ? "Computer thinking..." : "Your turn (black)") + score;
+                }
+            }
             switch (_game.Result)
             {
-                case ReversiResult.BlackWins: return "You win!" + score;
-                case ReversiResult.WhiteWins: return "Computer wins" + score;
+                case ReversiResult.BlackWins: return "Black wins!" + score;
+                case ReversiResult.WhiteWins: return "White wins!" + score;
                 case ReversiResult.Draw: return "Draw" + score;
                 default:
-                    return (_busy ? "Computer thinking..." : "Your turn (black)") + score;
+                    return (_game.CurrentPlayer == ReversiBoard.Black
+                        ? "Black's turn" : "White's turn") + score;
             }
         }
     }

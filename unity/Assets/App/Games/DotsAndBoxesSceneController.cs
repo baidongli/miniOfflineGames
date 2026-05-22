@@ -50,9 +50,11 @@ namespace MiniGames.App.Games
             new Dictionary<(EdgeKind, int, int), int>();
 
         private bool _busy;
+        private bool _vsCpu;
 
         private void Start()
         {
+            _vsCpu = !GameLaunch.SameDevice;
             _module = new DotsAndBoxesModule();
             _module.StartSolo(BuildContext());
             _game = _module.SoloGame;
@@ -166,10 +168,11 @@ namespace MiniGames.App.Games
         private void OnEdgeTapped(EdgeId edge)
         {
             if (_busy || _game.IsGameOver) return;
-            if (_game.CurrentPlayer != 0) return;            // human is player 0
+            // Solo: only player 0 (human) taps. Same-device: either player taps.
+            if (_vsCpu && _game.CurrentPlayer != 0) return;
             if (!_game.TryPlay(edge, out _)) return;         // illegal/taken -> ignore
             Sfx.Play("place");
-            if (!_game.IsGameOver && _game.CurrentPlayer == 1)
+            if (_vsCpu && !_game.IsGameOver && _game.CurrentPlayer == 1)
                 StartCoroutine(AiLoop());
         }
 
@@ -210,9 +213,10 @@ namespace MiniGames.App.Games
             {
                 int w = _game.WinnerOrDraw();
                 GameOverlay.Show(StatusText(),
-                    w == 0 ? GameOverlay.Outcome.Win
-                    : w == 1 ? GameOverlay.Outcome.Lose
-                    : GameOverlay.Outcome.Neutral);
+                    w < 0 ? GameOverlay.Outcome.Neutral
+                    : !_vsCpu ? GameOverlay.Outcome.Win   // someone won (hot-seat)
+                    : w == 0 ? GameOverlay.Outcome.Win
+                    : GameOverlay.Outcome.Lose);
             }
         }
 
@@ -225,16 +229,28 @@ namespace MiniGames.App.Games
 
         private string StatusText()
         {
-            int you = _game.Board.CountOwned(0);
-            int cpu = _game.Board.CountOwned(1);
-            string score = $"   You {you} : {cpu} CPU";
-            if (_game.IsGameOver)
+            int p0 = _game.Board.CountOwned(0);
+            int p1 = _game.Board.CountOwned(1);
+            if (_vsCpu)
             {
-                int w = _game.WinnerOrDraw();
-                string verdict = w < 0 ? "Draw" : w == 0 ? "You win!" : "CPU wins";
-                return verdict + score;
+                string score = $"   You {p0} : {p1} CPU";
+                if (_game.IsGameOver)
+                {
+                    int w = _game.WinnerOrDraw();
+                    return (w < 0 ? "Draw" : w == 0 ? "You win!" : "CPU wins") + score;
+                }
+                return (_busy ? "CPU thinking..." : "Your turn") + score;
             }
-            return (_busy ? "CPU thinking..." : "Your turn") + score;
+            else
+            {
+                string score = $"   Blue {p0} : {p1} Red";
+                if (_game.IsGameOver)
+                {
+                    int w = _game.WinnerOrDraw();
+                    return (w < 0 ? "Draw" : w == 0 ? "Blue wins!" : "Red wins!") + score;
+                }
+                return (_game.CurrentPlayer == 0 ? "Blue's turn" : "Red's turn") + score;
+            }
         }
     }
 }

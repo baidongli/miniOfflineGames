@@ -63,32 +63,46 @@ namespace MiniGames.App.Hub
             else Debug.Log($"[Hub] selected {module.Id} (no mode-select wired)");
         }
 
+        // Games with a same-device (hot-seat) implementation in their scene.
+        private static readonly HashSet<string> SameDeviceGames =
+            new HashSet<string> { "connect_four", "reversi", "dots_and_boxes" };
+
         private void OnModeChosen(IGameModule module, GameMode mode)
         {
             _modeSelect.gameObject.SetActive(false);
+            var scene = SceneFor(module.Id);
 
-            // Games wired into a solo scene so far. Everything else logs until
-            // its scene exists.
-            if (mode == GameMode.Solo)
+            if (mode == GameMode.Solo && scene != null)
             {
-                switch (module.Id)
-                {
-                    case "connect_four": SceneManager.LoadScene("ConnectFour"); return;
-                    case "reversi":      SceneManager.LoadScene("Reversi");     return;
-                    case "number_merge":   SceneManager.LoadScene("NumberMerge");   return;
-                    case "dots_and_boxes": SceneManager.LoadScene("DotsAndBoxes"); return;
-                    case "snakes":         SceneManager.LoadScene("Snakes");       return;
-                    case "tetris":         SceneManager.LoadScene("Tetris");       return;
-                    case "fruit_merge":    SceneManager.LoadScene("FruitMerge");   return;
-                    case "bomb_sweep":     SceneManager.LoadScene("BombSweep");     return;
-                    case "color_blocks":   SceneManager.LoadScene("ColorBlocks");   return;
-                    case "maze_paint":     SceneManager.LoadScene("MazePaint");     return;
-                    case "battleship":     SceneManager.LoadScene("Battleship");    return;
-                }
+                MiniGames.App.Games.GameLaunch.SameDevice = false;
+                SceneManager.LoadScene(scene);
+                return;
+            }
+            if (mode == GameMode.SameDevice && scene != null && SameDeviceGames.Contains(module.Id))
+            {
+                MiniGames.App.Games.GameLaunch.SameDevice = true;
+                SceneManager.LoadScene(scene);
+                return;
             }
 
             Debug.Log($"[Hub] {module.DisplayName} / {mode} not implemented yet");
         }
+
+        private static string SceneFor(string id) => id switch
+        {
+            "connect_four"   => "ConnectFour",
+            "reversi"        => "Reversi",
+            "number_merge"   => "NumberMerge",
+            "dots_and_boxes" => "DotsAndBoxes",
+            "snakes"         => "Snakes",
+            "tetris"         => "Tetris",
+            "fruit_merge"    => "FruitMerge",
+            "bomb_sweep"     => "BombSweep",
+            "color_blocks"   => "ColorBlocks",
+            "maze_paint"     => "MazePaint",
+            "battleship"     => "Battleship",
+            _ => null
+        };
 
         private void OnMenu() => SettingsOverlay.Show();
 

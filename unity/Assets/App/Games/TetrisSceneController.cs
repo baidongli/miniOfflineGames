@@ -66,6 +66,7 @@ namespace MiniGames.App.Games
             if (_rotateButton != null) _rotateButton.onClick.AddListener(() => Act(() => _game.TryRotate(1)));
             if (_hardButton != null) _hardButton.onClick.AddListener(() => Act(() => { _game.HardDrop(); return true; }));
             Loc.Label(_backButton, "ui.back");
+            InstructionsOverlay.AttachButton((RectTransform)transform, "tetris");
             Loc.Label(_restartButton, "ui.restart");
             Loc.Label(_rotateButton, "ui.rotate");
             Loc.Label(_hardButton, "ui.drop");

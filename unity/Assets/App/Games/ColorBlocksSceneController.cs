@@ -62,6 +62,7 @@ namespace MiniGames.App.Games
             if (_backButton != null) _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("ColorBlocks"));
             Loc.Label(_backButton, "ui.back");
+            InstructionsOverlay.AttachButton((RectTransform)transform, "color_blocks");
             Loc.Label(_restartButton, "ui.restart");
 
             RenderBoard();

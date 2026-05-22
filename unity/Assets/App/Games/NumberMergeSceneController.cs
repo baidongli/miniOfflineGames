@@ -47,6 +47,7 @@ namespace MiniGames.App.Games
             if (_newGameButton != null)
                 _newGameButton.onClick.AddListener(() => SceneManager.LoadScene("NumberMerge"));
             Loc.Label(_backButton, "ui.back");
+            InstructionsOverlay.AttachButton((RectTransform)transform, "number_merge");
             Loc.Label(_newGameButton, "ui.new_game");
 
             _game.Swiped += _ => Render();

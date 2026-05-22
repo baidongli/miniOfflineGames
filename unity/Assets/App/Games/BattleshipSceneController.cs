@@ -62,6 +62,7 @@ namespace MiniGames.App.Games
             if (_randomizeButton != null) _randomizeButton.onClick.AddListener(OnRandomize);
             if (_startButton != null) _startButton.onClick.AddListener(OnStartBattle);
             Loc.Label(_backButton, "ui.back");
+            InstructionsOverlay.AttachButton((RectTransform)transform, "battleship");
             Loc.Label(_restartButton, "ui.restart");
             Loc.Label(_randomizeButton, "ui.randomize");
             Loc.Label(_startButton, "ui.start");

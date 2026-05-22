@@ -92,6 +92,19 @@ namespace MiniGames.App.Shared.Localization.Tables
             { "ig.enemy_firing", "Enemy firing..." },
             { "ig.bomb_vs", "You (blue) vs CPU (red)" },
 
+            // How-to-play (one per game).
+            { "howto.connect_four", "Tap a column to drop your disc. Get four in a row - across, down, or diagonally - before the computer." },
+            { "howto.reversi", "Tap a highlighted square to place a disc and flip the opponent's discs trapped between yours. Most discs at the end wins." },
+            { "howto.number_merge", "Swipe to slide all tiles. Two equal tiles merge into one that doubles. Reach the 2048 tile!" },
+            { "howto.dots_and_boxes", "Tap a line between two dots. Completing the 4th side of a box claims it and gives you another turn. Most boxes wins." },
+            { "howto.snakes", "Swipe or use arrow keys to steer. Eat food to grow longer. Don't hit the walls or your own tail." },
+            { "howto.tetris", "Move and rotate the falling pieces. Fill a whole row to clear it. Don't let the stack reach the top." },
+            { "howto.fruit_merge", "Tap a column to drop a fruit. Matching fruits that touch merge into a bigger one - chain them for big scores." },
+            { "howto.bomb_sweep", "Move with the D-pad and drop bombs. Blow up the enemy while dodging blasts. Grab power-ups from soft blocks." },
+            { "howto.maze_paint", "Leave your territory to lay a trail, then return home to capture the enclosed area. Don't cross your own trail." },
+            { "howto.color_blocks", "Drag pieces onto the board. Fill a full row or column to clear it. The game ends when no piece fits." },
+            { "howto.battleship", "Place your fleet (Randomize/Start), then tap the enemy waters to fire. Sink all enemy ships before yours go down." },
+
             // Play modes.
             { "mode.solo", "Solo" },
             { "mode.same_device", "Same device" },

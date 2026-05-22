@@ -52,6 +52,7 @@ namespace MiniGames.App.Games
             if (_backButton != null) _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("MazePaint"));
             Loc.Label(_backButton, "ui.back");
+            InstructionsOverlay.AttachButton((RectTransform)transform, "maze_paint");
             Loc.Label(_restartButton, "ui.restart");
 
             Render();

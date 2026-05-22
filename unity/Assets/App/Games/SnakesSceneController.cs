@@ -54,6 +54,7 @@ namespace MiniGames.App.Games
             if (_restartButton != null)
                 _restartButton.onClick.AddListener(() => SceneManager.LoadScene("Snakes"));
             Loc.Label(_backButton, "ui.back");
+            InstructionsOverlay.AttachButton((RectTransform)transform, "snakes");
             Loc.Label(_restartButton, "ui.restart");
 
             Render();

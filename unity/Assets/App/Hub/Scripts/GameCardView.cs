@@ -37,6 +37,7 @@ namespace MiniGames.App.Hub
             if (_icon != null)
             {
                 _icon.color = visual.Color;
+                MiniGames.App.Games.Shapes.Circle(_icon); // round emblem (color + glyph)
                 EnsureGlyph().text = visual.Glyph;
             }
 

@@ -48,6 +48,7 @@ namespace MiniGames.App.Games
             if (_backButton != null)
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             Loc.Label(_backButton, "ui.back");
+            InstructionsOverlay.AttachButton((RectTransform)transform, "connect_four");
 
             _game.Moved += r =>
             {

@@ -9,10 +9,11 @@ using UnityEngine.UI;
 namespace MiniGames.App.Games
 {
     /// <summary>
-    /// Solo Bomb Sweep in its own scene. The module's StartSolo spawns a
-    /// single player (no opponent), so for an actual game the scene builds a
-    /// 2-player state directly: human is player 0, a heuristic AI is player 1.
-    /// 13x11 arena, 8 Hz tick. D-pad (hold) to move, Bomb button to drop.
+    /// Bomb Sweep, two modes (13x11 arena, 8 Hz):
+    ///  - Solo: human (P0) vs a heuristic AI (P1).
+    ///  - Same-device: two humans. P0 = baked left D-pad + WASD + a left bomb
+    ///    button (Space); P1 = a runtime right D-pad + arrow keys + a right
+    ///    bomb button (Enter). Last player alive wins.
     /// </summary>
     public sealed class BombSweepSceneController : MonoBehaviour
     {
@@ -38,8 +39,8 @@ namespace MiniGames.App.Games
         private static readonly Color Blast = new Color(1.00f, 0.62f, 0.20f);
         private static readonly Color[] PlayerCol =
         {
-            new Color(0.35f, 0.60f, 0.98f), // P0 human blue
-            new Color(0.95f, 0.38f, 0.38f), // P1 cpu red
+            new Color(0.35f, 0.60f, 0.98f), // P0 blue
+            new Color(0.95f, 0.38f, 0.38f), // P1 red
             new Color(0.45f, 0.85f, 0.50f),
             new Color(0.95f, 0.85f, 0.35f),
         };
@@ -49,20 +50,27 @@ namespace MiniGames.App.Games
         private Image[,] _cells;
         private int _w, _h;
         private bool _over;
-        private bool _bombQueued;
+        private bool _twoPlayer;
+        private int _winner = -1;
+        private readonly bool[] _bombQ = new bool[2];
+        private readonly HoldButton[] _p1dir = new HoldButton[4]; // Up,Down,Left,Right
 
         private void Start()
         {
+            _twoPlayer = GameLaunch.SameDevice;
             _state = new BombSweepGameState(playerCount: 2,
                 seed: Random.Range(int.MinValue, int.MaxValue));
-            _cpu = new CpuBombSweepController(_state, 1, new SimpleBombSweepAI());
+            if (!_twoPlayer) _cpu = new CpuBombSweepController(_state, 1, new SimpleBombSweepAI());
             _w = _state.Board.Width;
             _h = _state.Board.Height;
 
             BuildCells();
             if (_backButton != null) _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("BombSweep"));
-            if (_bombButton != null) _bombButton.onClick.AddListener(() => _bombQueued = true);
+            if (_bombButton != null) _bombButton.onClick.AddListener(() => _bombQ[0] = true);
+
+            if (_twoPlayer) BuildSecondPlayerControls();
+
             Loc.Label(_backButton, "ui.back");
             InstructionsOverlay.AttachButton((RectTransform)transform, "bomb_sweep");
             Art.StyleButtons((RectTransform)transform);
@@ -77,10 +85,69 @@ namespace MiniGames.App.Games
             StartCoroutine(TickLoop());
         }
 
+        // ---- two-player controls (runtime) ----
+
+        private void BuildSecondPlayerControls()
+        {
+            // The baked bomb button sits bottom-right where P1's D-pad goes; hide it
+            // and give P0 a bomb button on the left instead.
+            if (_bombButton != null) _bombButton.gameObject.SetActive(false);
+
+            MakeTap("P0_Bomb", -90f, 215f, 180f, Loc.T("ui.bomb"), PlayerCol[0], () => _bombQ[0] = true);
+
+            _p1dir[0] = MakeHold("P1_Up", 300f, 320f, "▲");
+            _p1dir[1] = MakeHold("P1_Down", 300f, 110f, "▼");
+            _p1dir[2] = MakeHold("P1_Left", 170f, 215f, "◀");
+            _p1dir[3] = MakeHold("P1_Right", 430f, 215f, "▶");
+            MakeTap("P1_Bomb", 90f, 215f, 180f, Loc.T("ui.bomb"), PlayerCol[1], () => _bombQ[1] = true);
+        }
+
+        private HoldButton MakeHold(string name, float x, float y, string glyph)
+        {
+            var btn = MakeTap(name, x, y, 120f, glyph, PlayerCol[1], null);
+            return btn.gameObject.AddComponent<HoldButton>();
+        }
+
+        private Button MakeTap(string name, float x, float y, float size, string label,
+            Color color, UnityEngine.Events.UnityAction onClick)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(transform, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(size, size);
+            rt.anchoredPosition = new Vector2(x, y);
+            var img = go.GetComponent<Image>();
+            img.color = color;
+            var btn = go.GetComponent<Button>();
+            btn.targetGraphic = img;
+            if (onClick != null) btn.onClick.AddListener(onClick);
+
+            var lgo = new GameObject("L", typeof(RectTransform));
+            var lrt = (RectTransform)lgo.transform;
+            lrt.SetParent(rt, false);
+            lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
+            lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
+            var t = lgo.AddComponent<TextMeshProUGUI>();
+            t.text = label;
+            t.fontSize = 34;
+            t.alignment = TextAlignmentOptions.Center;
+            t.color = Color.white;
+            t.raycastTarget = false;
+            return btn;
+        }
+
         private void Update()
         {
             if (_over) return;
-            if (Input.GetKeyDown(KeyCode.Space)) _bombQueued = true;
+            if (_twoPlayer)
+            {
+                if (Input.GetKeyDown(KeyCode.Space)) _bombQ[0] = true;
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)
+                    || Input.GetKeyDown(KeyCode.RightShift)) _bombQ[1] = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Space)) _bombQ[0] = true;
         }
 
         private IEnumerator TickLoop()
@@ -91,9 +158,10 @@ namespace MiniGames.App.Games
                 yield return wait;
                 if (_over) break;
 
-                _state.SetInput(0, CurrentHeading(), _bombQueued);
-                _bombQueued = false;
-                _cpu.BeforeTick();
+                _state.SetInput(0, HeadingFor(0), _bombQ[0]);
+                _bombQ[0] = false;
+                if (_twoPlayer) { _state.SetInput(1, HeadingFor(1), _bombQ[1]); _bombQ[1] = false; }
+                else _cpu.BeforeTick();
 
                 var res = BombSweepEngine.Step(_state);
                 Render();
@@ -104,19 +172,33 @@ namespace MiniGames.App.Games
                         foreach (var c in e.Cells)
                             if (In(c.X, c.Y)) UiTween.Pop(_cells[c.X, c.Y].rectTransform, 0.4f, 0.18f);
                 }
-                if (res.MatchOver) { _over = true; Render(); }
+                if (res.MatchOver) { _winner = res.WinnerIndex ?? -1; _over = true; Render(); }
             }
         }
 
-        private BombDir CurrentHeading()
+        private BombDir HeadingFor(int player)
         {
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W) || Held(_upButton)) return BombDir.Up;
-            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S) || Held(_downButton)) return BombDir.Down;
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Held(_leftButton)) return BombDir.Left;
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Held(_rightButton)) return BombDir.Right;
+            bool up, down, left, right;
+            if (player == 0)
+            {
+                up = Held(_upButton); down = Held(_downButton); left = Held(_leftButton); right = Held(_rightButton);
+                up |= K(KeyCode.W); down |= K(KeyCode.S); left |= K(KeyCode.A); right |= K(KeyCode.D);
+                if (!_twoPlayer) // solo: arrows also drive P0
+                { up |= K(KeyCode.UpArrow); down |= K(KeyCode.DownArrow); left |= K(KeyCode.LeftArrow); right |= K(KeyCode.RightArrow); }
+            }
+            else
+            {
+                up = Held(_p1dir[0]); down = Held(_p1dir[1]); left = Held(_p1dir[2]); right = Held(_p1dir[3]);
+                up |= K(KeyCode.UpArrow); down |= K(KeyCode.DownArrow); left |= K(KeyCode.LeftArrow); right |= K(KeyCode.RightArrow);
+            }
+            if (up) return BombDir.Up;
+            if (down) return BombDir.Down;
+            if (left) return BombDir.Left;
+            if (right) return BombDir.Right;
             return BombDir.None;
         }
 
+        private static bool K(KeyCode k) => Input.GetKey(k);
         private static bool Held(HoldButton b) => b != null && b.IsHeld;
 
         private void BuildCells()
@@ -167,14 +249,7 @@ namespace MiniGames.App.Games
                 }
 
             if (_status != null) _status.text = StatusText();
-            if (_over)
-            {
-                bool you = _state.Players[0].IsAlive, cpu = _state.Players[1].IsAlive;
-                GameOverlay.Show(StatusText(),
-                    you && !cpu ? GameOverlay.Outcome.Win
-                    : !you ? GameOverlay.Outcome.Lose
-                    : GameOverlay.Outcome.Neutral);
-            }
+            if (_over) ShowOver();
         }
 
         private bool In(int x, int y) => x >= 0 && y >= 0 && x < _w && y < _h;
@@ -201,15 +276,34 @@ namespace MiniGames.App.Games
 
         private string StatusText()
         {
-            bool you = _state.Players[0].IsAlive;
-            bool cpu = _state.Players[1].IsAlive;
+            bool p0 = _state.Players[0].IsAlive, p1 = _state.Players[1].IsAlive;
+            if (_twoPlayer)
+            {
+                if (_over) return _winner >= 0 ? Loc.T("ig.player_wins", _winner + 1) : Loc.T("result.draw");
+                return "P1  vs  P2";
+            }
             if (_over)
             {
-                if (you && !cpu) return Loc.T("result.you_win");
-                if (!you && cpu) return Loc.T("result.you_lose");
+                if (p0 && !p1) return Loc.T("result.you_win");
+                if (!p0) return Loc.T("result.you_lose");
                 return Loc.T("result.draw");
             }
             return Loc.T("ig.bomb_vs");
+        }
+
+        private void ShowOver()
+        {
+            if (_twoPlayer)
+            {
+                GameOverlay.Show(StatusText(),
+                    _winner >= 0 ? GameOverlay.Outcome.Win : GameOverlay.Outcome.Neutral);
+                return;
+            }
+            bool p0 = _state.Players[0].IsAlive, p1 = _state.Players[1].IsAlive;
+            GameOverlay.Show(StatusText(),
+                p0 && !p1 ? GameOverlay.Outcome.Win
+                : !p0 ? GameOverlay.Outcome.Lose
+                : GameOverlay.Outcome.Neutral);
         }
     }
 }

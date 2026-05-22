@@ -64,7 +64,8 @@ namespace MiniGames.App.Hub
                 {
                     case "connect_four": SceneManager.LoadScene("ConnectFour"); return;
                     case "reversi":      SceneManager.LoadScene("Reversi");     return;
-                    case "number_merge": SceneManager.LoadScene("NumberMerge"); return;
+                    case "number_merge":   SceneManager.LoadScene("NumberMerge");   return;
+                    case "dots_and_boxes": SceneManager.LoadScene("DotsAndBoxes"); return;
                 }
             }
 

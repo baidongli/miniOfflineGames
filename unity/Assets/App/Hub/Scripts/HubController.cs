@@ -70,6 +70,8 @@ namespace MiniGames.App.Hub
             {
                 var card = Instantiate(_cardPrefab, _gameGrid);
                 card.Bind(module, OnGameCardTapped);
+                MiniGames.App.Games.UiTween.Pop(
+                    (RectTransform)card.transform, 0.6f, 0.26f, _cards.Count * 0.04f);
                 _cards.Add(card);
             }
         }

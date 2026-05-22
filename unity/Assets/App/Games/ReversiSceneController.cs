@@ -58,7 +58,7 @@ namespace MiniGames.App.Games
                 {
                     UiTween.Pop(_cells[r.X, r.Y].rectTransform);
                     if (r.Flipped != null)
-                        foreach (var (fx, fy) in r.Flipped) UiTween.Pop(_cells[fx, fy].rectTransform);
+                        foreach (var (fx, fy) in r.Flipped) UiTween.Flip(_cells[fx, fy].rectTransform);
                 }
                 Render();
             };

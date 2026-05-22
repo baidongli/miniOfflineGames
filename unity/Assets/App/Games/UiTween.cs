@@ -21,13 +21,22 @@ namespace MiniGames.App.Games
             return _runner;
         }
 
-        public static void Pop(RectTransform rt, float from = 0.5f, float dur = 0.18f)
+        public static void Pop(RectTransform rt, float from = 0.5f, float dur = 0.18f, float delay = 0f)
         {
-            if (rt != null) Runner().StartCoroutine(PopRoutine(rt, from, dur));
+            if (rt == null) return;
+            if (delay > 0f) rt.localScale = new Vector3(from, from, 1f); // avoid a full-size flash before the delay
+            Runner().StartCoroutine(PopRoutine(rt, from, dur, delay));
         }
 
-        private static IEnumerator PopRoutine(RectTransform rt, float from, float dur)
+        /// <summary>Coin-flip squash on the X axis (1 -> 0 -> 1). Good for flipping discs.</summary>
+        public static void Flip(RectTransform rt, float dur = 0.24f)
         {
+            if (rt != null) Runner().StartCoroutine(FlipRoutine(rt, dur));
+        }
+
+        private static IEnumerator PopRoutine(RectTransform rt, float from, float dur, float delay)
+        {
+            if (delay > 0f) yield return new WaitForSeconds(delay);
             float t = 0f;
             while (t < dur)
             {
@@ -36,6 +45,21 @@ namespace MiniGames.App.Games
                 float k = Mathf.Clamp01(t / dur);
                 float s = Mathf.LerpUnclamped(from, 1f, EaseOutBack(k));
                 rt.localScale = new Vector3(s, s, 1f);
+                yield return null;
+            }
+            if (rt != null) rt.localScale = Vector3.one;
+        }
+
+        private static IEnumerator FlipRoutine(RectTransform rt, float dur)
+        {
+            float t = 0f;
+            while (t < dur)
+            {
+                if (rt == null) yield break;
+                t += Time.unscaledDeltaTime;
+                float k = Mathf.Clamp01(t / dur);
+                float sx = Mathf.Max(0.05f, Mathf.Abs(Mathf.Cos(k * Mathf.PI)));
+                rt.localScale = new Vector3(sx, 1f, 1f);
                 yield return null;
             }
             if (rt != null) rt.localScale = Vector3.one;

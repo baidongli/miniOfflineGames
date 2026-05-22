@@ -96,6 +96,13 @@ namespace MiniGames.App.Games
 
                 var res = BombSweepEngine.Step(_state);
                 Render();
+                if (res.ExplodedThisTick != null && res.ExplodedThisTick.Count > 0)
+                {
+                    Sfx.Play("hit");
+                    foreach (var e in _state.Explosions)
+                        foreach (var c in e.Cells)
+                            if (In(c.X, c.Y)) UiTween.Pop(_cells[c.X, c.Y].rectTransform, 0.4f, 0.18f);
+                }
                 if (res.MatchOver) { _over = true; Render(); }
             }
         }

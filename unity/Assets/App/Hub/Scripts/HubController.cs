@@ -90,7 +90,7 @@ namespace MiniGames.App.Hub
 
         // Games with a same-device (hot-seat) implementation in their scene.
         private static readonly HashSet<string> SameDeviceGames =
-            new HashSet<string> { "connect_four", "reversi", "dots_and_boxes", "battleship" };
+            new HashSet<string> { "connect_four", "reversi", "dots_and_boxes", "battleship", "snakes" };
 
         private void OnModeChosen(IGameModule module, GameMode mode)
         {

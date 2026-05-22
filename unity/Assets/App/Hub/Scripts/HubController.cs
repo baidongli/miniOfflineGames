@@ -70,6 +70,7 @@ namespace MiniGames.App.Hub
                     case "tetris":         SceneManager.LoadScene("Tetris");       return;
                     case "fruit_merge":    SceneManager.LoadScene("FruitMerge");   return;
                     case "bomb_sweep":     SceneManager.LoadScene("BombSweep");     return;
+                    case "color_blocks":   SceneManager.LoadScene("ColorBlocks");   return;
                 }
             }
 

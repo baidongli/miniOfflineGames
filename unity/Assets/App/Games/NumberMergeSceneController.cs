@@ -145,7 +145,11 @@ namespace MiniGames.App.Games
                         : Color.white;
                 }
             if (_status != null) _status.text = StatusText();
-            if (_game.IsGameOver) GameOverlay.Show(StatusText());
+            if (_game.IsGameOver)
+            {
+                bool rec = BestScores.Report("number_merge", _game.Score);
+                GameOverlay.Show(StatusText() + BestScores.Suffix("number_merge", rec));
+            }
         }
 
         private string StatusText()

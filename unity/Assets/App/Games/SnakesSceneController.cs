@@ -139,7 +139,11 @@ namespace MiniGames.App.Games
             }
 
             if (_status != null) _status.text = StatusText(snake);
-            if (_over) GameOverlay.Show(StatusText(snake));
+            if (_over)
+            {
+                bool rec = BestScores.Report("snakes", snake.FoodEaten);
+                GameOverlay.Show(StatusText(snake) + BestScores.Suffix("snakes", rec));
+            }
         }
 
         private bool InBounds(int x, int y) => x >= 0 && y >= 0 && x < _w && y < _h;

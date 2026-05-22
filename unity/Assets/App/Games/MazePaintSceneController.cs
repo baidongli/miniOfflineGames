@@ -133,7 +133,11 @@ namespace MiniGames.App.Games
                 _cells[p.Head.X, p.Head.Y].color = Head;
 
             if (_status != null) _status.text = StatusText();
-            if (_over) GameOverlay.Show(StatusText());
+            if (_over)
+            {
+                bool rec = BestScores.Report("maze_paint", _state.Board.CountOwned(0));
+                GameOverlay.Show(StatusText() + BestScores.Suffix("maze_paint", rec));
+            }
         }
 
         private string StatusText()

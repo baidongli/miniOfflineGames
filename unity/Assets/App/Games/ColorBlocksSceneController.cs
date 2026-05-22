@@ -231,7 +231,11 @@ namespace MiniGames.App.Games
             _status.text = _game.IsGameOver
                 ? $"Game Over   Score {_game.Score}"
                 : $"Score {_game.Score}";
-            if (_game.IsGameOver) GameOverlay.Show($"Game Over\nScore {_game.Score}");
+            if (_game.IsGameOver)
+            {
+                bool rec = BestScores.Report("color_blocks", _game.Score);
+                GameOverlay.Show($"Game Over   Score {_game.Score}" + BestScores.Suffix("color_blocks", rec));
+            }
         }
 
         private static Color ColorFor(byte id)

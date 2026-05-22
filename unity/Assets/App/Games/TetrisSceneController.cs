@@ -181,7 +181,11 @@ namespace MiniGames.App.Games
             }
 
             if (_status != null) _status.text = StatusText();
-            if (_over) GameOverlay.Show(StatusText());
+            if (_over)
+            {
+                bool rec = BestScores.Report("tetris", _game.Score);
+                GameOverlay.Show(StatusText() + BestScores.Suffix("tetris", rec));
+            }
         }
 
         private static Color ColorFor(byte v)

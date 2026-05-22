@@ -126,7 +126,11 @@ namespace MiniGames.App.Games
 
             if (_nextSwatch != null) _nextSwatch.color = ColorFor(_game.NextFruit);
             if (_status != null) _status.text = StatusText();
-            if (_game.IsGameOver) GameOverlay.Show(StatusText());
+            if (_game.IsGameOver)
+            {
+                bool rec = BestScores.Report("fruit_merge", _game.Score);
+                GameOverlay.Show(StatusText() + BestScores.Suffix("fruit_merge", rec));
+            }
         }
 
         private static Color ColorFor(byte tier)

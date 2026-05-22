@@ -128,6 +128,7 @@ namespace MiniGames.App.Games
                     _cells[lx, ly].color = FeltHint;
 
             if (_status != null) _status.text = StatusText();
+            if (_game.IsGameOver) GameOverlay.Show(StatusText());
         }
 
         private string StatusText()

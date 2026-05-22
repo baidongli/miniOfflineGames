@@ -202,6 +202,7 @@ namespace MiniGames.App.Games
                 }
 
             if (_status != null) _status.text = StatusText();
+            if (_game.IsGameOver) GameOverlay.Show(StatusText());
         }
 
         private Color EdgeColor(EdgeKind kind, int x, int y, bool drawn)

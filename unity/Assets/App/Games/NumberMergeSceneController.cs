@@ -132,6 +132,7 @@ namespace MiniGames.App.Games
                         : Color.white;
                 }
             if (_status != null) _status.text = StatusText();
+            if (_game.IsGameOver) GameOverlay.Show(StatusText());
         }
 
         private string StatusText()

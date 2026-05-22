@@ -138,6 +138,7 @@ namespace MiniGames.App.Games
                     _cells[p.Pos.X, p.Pos.Y].color = PlayerCol[p.Index % PlayerCol.Length];
 
             if (_status != null) _status.text = StatusText();
+            if (_over) GameOverlay.Show(StatusText());
         }
 
         private bool In(int x, int y) => x >= 0 && y >= 0 && x < _w && y < _h;

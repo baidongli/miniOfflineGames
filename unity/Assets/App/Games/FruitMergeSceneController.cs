@@ -126,6 +126,7 @@ namespace MiniGames.App.Games
 
             if (_nextSwatch != null) _nextSwatch.color = ColorFor(_game.NextFruit);
             if (_status != null) _status.text = StatusText();
+            if (_game.IsGameOver) GameOverlay.Show(StatusText());
         }
 
         private static Color ColorFor(byte tier)

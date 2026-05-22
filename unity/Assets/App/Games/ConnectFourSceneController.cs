@@ -114,6 +114,7 @@ namespace MiniGames.App.Games
                                        : SlotEmpty;
                 }
             if (_status != null) _status.text = StatusText();
+            if (_game.IsGameOver) GameOverlay.Show(StatusText());
         }
 
         private string StatusText()

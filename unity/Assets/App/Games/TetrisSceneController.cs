@@ -167,6 +167,7 @@ namespace MiniGames.App.Games
             }
 
             if (_status != null) _status.text = StatusText();
+            if (_over) GameOverlay.Show(StatusText());
         }
 
         private static Color ColorFor(byte v)

@@ -163,6 +163,7 @@ namespace MiniGames.App.Games
                     _ownCells[x, y].color = OwnColor(x, y);
                 }
             if (_status != null) _status.text = StatusText();
+            if (_phase == Phase.Over) GameOverlay.Show(StatusText());
         }
 
         private Color EnemyColor(int x, int y)

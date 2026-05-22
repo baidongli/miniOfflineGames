@@ -224,6 +224,7 @@ namespace MiniGames.App.Games
             _status.text = _game.IsGameOver
                 ? $"Game Over   Score {_game.Score}"
                 : $"Score {_game.Score}";
+            if (_game.IsGameOver) GameOverlay.Show($"Game Over\nScore {_game.Score}");
         }
 
         private static Color ColorFor(byte id)

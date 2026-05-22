@@ -132,6 +132,7 @@ namespace MiniGames.App.Games
                 _cells[p.Head.X, p.Head.Y].color = Head;
 
             if (_status != null) _status.text = StatusText();
+            if (_over) GameOverlay.Show(StatusText());
         }
 
         private string StatusText()

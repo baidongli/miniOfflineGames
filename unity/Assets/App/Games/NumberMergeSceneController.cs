@@ -142,8 +142,15 @@ namespace MiniGames.App.Games
                 for (int x = 0; x < N; x++)
                 {
                     byte exp = _game.Board.Get(x, y);
+                    int val = exp == 0 ? 0 : _game.Board.Value(x, y);
+                    if (exp != 0 && Art.TryApply(_cells[x, y], "number_merge", $"tile_{val}"))
+                    {
+                        _labels[x, y].text = ""; // real tile art: hide the number
+                        continue;
+                    }
+                    Shapes.Rounded(_cells[x, y]);
                     _cells[x, y].color = TileColor(exp);
-                    _labels[x, y].text = exp == 0 ? "" : _game.Board.Value(x, y).ToString();
+                    _labels[x, y].text = exp == 0 ? "" : val.ToString();
                     _labels[x, y].color = exp <= 2
                         ? new Color(0.30f, 0.28f, 0.25f)
                         : Color.white;

@@ -39,7 +39,8 @@ namespace MiniGames.App.Games
         public static bool Has(string gameId, string name) => Load(gameId, name) != null;
 
         /// <summary>Apply art to an Image if present. Returns false (Image untouched) when missing.</summary>
-        public static bool TryApply(Image img, string gameId, string name, bool preserveAspect = true)
+        public static bool TryApply(Image img, string gameId, string name,
+            bool preserveAspect = true, bool keepColor = false)
         {
             if (img == null) return false;
             var sprite = Load(gameId, name);
@@ -47,7 +48,7 @@ namespace MiniGames.App.Games
             img.sprite = sprite;
             img.type = Image.Type.Simple;
             img.preserveAspect = preserveAspect;
-            img.color = Color.white;
+            if (!keepColor) img.color = Color.white; // keepColor: caller tints a white sprite
             return true;
         }
     }

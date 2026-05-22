@@ -197,7 +197,12 @@ namespace MiniGames.App.Games
         {
             for (int y = 0; y < _n; y++)
                 for (int x = 0; x < _n; x++)
-                    _cells[x, y].color = ColorFor(_game.Board.Get(x, y));
+                {
+                    byte id = _game.Board.Get(x, y);
+                    if (id == 0 || !Art.TryApply(_cells[x, y], "color_blocks", "block", keepColor: true))
+                        Shapes.Rounded(_cells[x, y]);
+                    _cells[x, y].color = ColorFor(id);
+                }
         }
 
         private void RenderHand()
@@ -224,8 +229,9 @@ namespace MiniGames.App.Games
                     rt.anchoredPosition = new Vector2(lx, ly);
                     var img = go.GetComponent<Image>();
                     img.raycastTarget = false; // let drags hit the slot
+                    if (!Art.TryApply(img, "color_blocks", "block", keepColor: true))
+                        Shapes.Rounded(img);
                     img.color = ColorFor(shape.ColorId);
-                    Shapes.Rounded(img);
                 }
             }
         }

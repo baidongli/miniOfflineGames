@@ -23,27 +23,27 @@ the inspector, but it works either way.
 
 ## Filenames per game
 
-Wired and working today:
+All of these are **wired** — drop the PNG in and it shows up next Play, no
+code changes. `icon.png` works for every game.
 
 | File | Used by | Notes |
 |------|---------|-------|
 | `icon.png` | **all games** | Hub card logo. Replaces the color circle + glyph. Square, ~256×256. |
-| `tier1.png` … `tier11.png` | `fruit_merge` | One image per fruit tier (1 = smallest). Replaces the colored numbered circle. |
+| `disc_a.png`, `disc_b.png` | connect_four | Your (red) and CPU (yellow) discs. |
+| `disc_black.png`, `disc_white.png` | reversi | The two disc colors. |
+| `tile_2.png`, `tile_4.png`, … `tile_2048.png` | number_merge (2048) | One per tile **value**. Replaces the numbered tile. |
+| `tier1.png` … `tier11.png` | fruit_merge | One per fruit tier (1 = smallest). |
+| `head.png`, `body.png`, `food.png` | snakes | Snake head, body segment, food. |
+| `block_i/o/t/s/z/j/l.png` | tetris | One per tetromino. |
+| `block.png` | color_blocks | One white block, tinted per color. |
+| `player.png`, `cpu.png`, `bomb.png`, `explosion.png`, `wall.png`, `soft.png`, `power_bombs.png`, `power_range.png`, `power_speed.png` | bomb_sweep | Arena elements. |
+| `ship.png`, `hit.png`, `miss.png` | battleship | Cell states (water stays procedural). |
 
-Reserved names (drop the files and tell me to wire them — a few lines each):
+Maze Paint and Dots and Boxes use flat colors and have no per-element art
+hooks yet (ask if you want some).
 
-| Game | Suggested files |
-|------|-----------------|
-| connect_four | `disc_a.png` (red/you), `disc_b.png` (yellow/cpu) |
-| reversi | `disc_black.png`, `disc_white.png` |
-| number_merge (2048) | `tile_2.png`, `tile_4.png`, … `tile_2048.png` (by value) |
-| snakes | `head.png`, `body.png`, `food.png` |
-| tetris | `block_i.png`, `block_o.png`, `block_t.png`, `block_s.png`, `block_z.png`, `block_j.png`, `block_l.png` |
-| bomb_sweep | `player.png`, `cpu.png`, `bomb.png`, `explosion.png`, `wall.png`, `soft.png`, `power_bombs.png`, `power_range.png`, `power_speed.png` |
-| color_blocks | `block.png` (white, tinted per color) |
-| battleship | `ship.png`, `hit.png`, `miss.png` |
-| maze_paint | `tile.png` (optional; colors usually fine) |
-| dots_and_boxes | `dot.png` (optional) |
+Any file you omit simply keeps the current procedural look, so you can add art
+one piece at a time.
 
 ## How to produce them
 

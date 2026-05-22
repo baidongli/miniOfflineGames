@@ -128,16 +128,20 @@ namespace MiniGames.App.Games
         {
             for (int y = 0; y < _h; y++)
                 for (int x = 0; x < _w; x++)
+                {
+                    Shapes.Rounded(_cells[x, y]);
                     _cells[x, y].color = Empty;
+                }
 
             foreach (var f in _state.Food)
-                if (InBounds(f.X, f.Y)) _cells[f.X, f.Y].color = Food;
+                if (InBounds(f.X, f.Y) && !Art.TryApply(_cells[f.X, f.Y], "snakes", "food"))
+                    _cells[f.X, f.Y].color = Food;
 
             var snake = _state.Snakes[0];
             bool first = true;
             foreach (var p in snake.Body)
             {
-                if (InBounds(p.X, p.Y))
+                if (InBounds(p.X, p.Y) && !Art.TryApply(_cells[p.X, p.Y], "snakes", first ? "head" : "body"))
                     _cells[p.X, p.Y].color = first ? Head : Body;
                 first = false;
             }

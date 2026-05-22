@@ -135,9 +135,12 @@ namespace MiniGames.App.Games
                 for (int x = 0; x < N; x++)
                 {
                     byte v = _game.Board.Get(x, y);
-                    if (v == ReversiBoard.Black) _cells[x, y].color = DiscBlack;
-                    else if (v == ReversiBoard.White) _cells[x, y].color = DiscWhite;
-                    else _cells[x, y].color = Felt;
+                    string art = v == ReversiBoard.Black ? "disc_black"
+                               : v == ReversiBoard.White ? "disc_white" : null;
+                    if (art != null && Art.TryApply(_cells[x, y], "reversi", art)) continue;
+                    Shapes.Circle(_cells[x, y]);
+                    _cells[x, y].color = v == ReversiBoard.Black ? DiscBlack
+                                       : v == ReversiBoard.White ? DiscWhite : Felt;
                 }
 
             if (showHints)

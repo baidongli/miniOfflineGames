@@ -140,18 +140,30 @@ namespace MiniGames.App.Games
         {
             for (int y = 0; y < _h; y++)
                 for (int x = 0; x < _w; x++)
-                    _cells[x, y].color = CellColor(_state.Board.Get(x, y));
+                {
+                    var ct = _state.Board.Get(x, y);
+                    string n = ArtName(ct);
+                    if (n != null && Art.TryApply(_cells[x, y], "bomb_sweep", n)) continue;
+                    Shapes.Rounded(_cells[x, y]);
+                    _cells[x, y].color = CellColor(ct);
+                }
 
             foreach (var b in _state.Bombs)
-                if (In(b.Pos.X, b.Pos.Y)) _cells[b.Pos.X, b.Pos.Y].color = BombCol;
+                if (In(b.Pos.X, b.Pos.Y) && !Art.TryApply(_cells[b.Pos.X, b.Pos.Y], "bomb_sweep", "bomb"))
+                { Shapes.Rounded(_cells[b.Pos.X, b.Pos.Y]); _cells[b.Pos.X, b.Pos.Y].color = BombCol; }
 
             foreach (var e in _state.Explosions)
                 foreach (var c in e.Cells)
-                    if (In(c.X, c.Y)) _cells[c.X, c.Y].color = Blast;
+                    if (In(c.X, c.Y) && !Art.TryApply(_cells[c.X, c.Y], "bomb_sweep", "explosion"))
+                    { Shapes.Rounded(_cells[c.X, c.Y]); _cells[c.X, c.Y].color = Blast; }
 
             foreach (var p in _state.Players)
                 if (p.IsAlive && In(p.Pos.X, p.Pos.Y))
-                    _cells[p.Pos.X, p.Pos.Y].color = PlayerCol[p.Index % PlayerCol.Length];
+                {
+                    var cell = _cells[p.Pos.X, p.Pos.Y];
+                    if (!Art.TryApply(cell, "bomb_sweep", p.Index == 0 ? "player" : "cpu"))
+                    { Shapes.Rounded(cell); cell.color = PlayerCol[p.Index % PlayerCol.Length]; }
+                }
 
             if (_status != null) _status.text = StatusText();
             if (_over)
@@ -165,6 +177,16 @@ namespace MiniGames.App.Games
         }
 
         private bool In(int x, int y) => x >= 0 && y >= 0 && x < _w && y < _h;
+
+        private static string ArtName(CellType c) => c switch
+        {
+            CellType.HardWall => "wall",
+            CellType.SoftBlock => "soft",
+            CellType.PowerBombs => "power_bombs",
+            CellType.PowerRange => "power_range",
+            CellType.PowerSpeed => "power_speed",
+            _ => null,
+        };
 
         private static Color CellColor(CellType c) => c switch
         {

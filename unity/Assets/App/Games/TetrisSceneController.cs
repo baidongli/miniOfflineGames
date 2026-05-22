@@ -170,20 +170,16 @@ namespace MiniGames.App.Games
         {
             for (int y = 0; y < H; y++)
                 for (int x = 0; x < W; x++)
-                {
-                    byte v = _game.Board.Get(x, y);
-                    _cells[x, y].color = ColorFor(v);
-                }
+                    ApplyCell(_cells[x, y], _game.Board.Get(x, y));
 
             // Overlay the active piece (cells in the visible range).
             if (!_over)
             {
                 var cells = TetrominoShapes.Cells(_game.Current, _game.Rotation);
-                var col = ColorFor((byte)_game.Current);
                 foreach (var (cx, cy) in cells)
                 {
                     int bx = _game.X + cx, by = _game.Y + cy;
-                    if (bx >= 0 && bx < W && by >= 0 && by < H) _cells[bx, by].color = col;
+                    if (bx >= 0 && bx < W && by >= 0 && by < H) ApplyCell(_cells[bx, by], (byte)_game.Current);
                 }
             }
 
@@ -194,6 +190,23 @@ namespace MiniGames.App.Games
                 GameOverlay.Show(StatusText() + BestScores.Suffix("tetris", rec));
             }
         }
+
+        private void ApplyCell(Image img, byte v)
+        {
+            if (v != 0)
+            {
+                string n = BlockName(v);
+                if (n != null && Art.TryApply(img, "tetris", n)) return;
+            }
+            Shapes.Rounded(img);
+            img.color = ColorFor(v);
+        }
+
+        private static string BlockName(byte v) => v switch
+        {
+            1 => "block_i", 2 => "block_o", 3 => "block_t", 4 => "block_s",
+            5 => "block_z", 6 => "block_j", 7 => "block_l", _ => null
+        };
 
         private static Color ColorFor(byte v)
             => v < PieceColor.Length ? PieceColor[v] : Color.gray;

@@ -167,13 +167,20 @@ namespace MiniGames.App.Games
             for (int y = 0; y < N; y++)
                 for (int x = 0; x < N; x++)
                 {
-                    _enemyCells[x, y].color = EnemyColor(x, y);
-                    _ownCells[x, y].color = OwnColor(x, y);
+                    Paint(_enemyCells[x, y], EnemyArt(x, y), EnemyColor(x, y));
+                    Paint(_ownCells[x, y], OwnArt(x, y), OwnColor(x, y));
                 }
             if (_status != null) _status.text = StatusText();
             if (_phase == Phase.Over)
                 GameOverlay.Show(StatusText(),
                     _cpuFleet.AllShipsSunk() ? GameOverlay.Outcome.Win : GameOverlay.Outcome.Lose);
+        }
+
+        private static void Paint(Image img, string artName, Color color)
+        {
+            if (artName != null && Art.TryApply(img, "battleship", artName)) return;
+            Shapes.Rounded(img);
+            img.color = color;
         }
 
         private Color EnemyColor(int x, int y)
@@ -185,6 +192,15 @@ namespace MiniGames.App.Games
             return Water;
         }
 
+        private string EnemyArt(int x, int y)
+        {
+            byte ship = _humanTracker.ShipAt(x, y);
+            if (ship >= 1 && ship <= 5) return "ship";   // sunk ship revealed
+            if (ship == 255) return "hit";
+            if (_humanTracker.ShotAt(x, y)) return "miss";
+            return null;                                  // water -> procedural
+        }
+
         private Color OwnColor(int x, int y)
         {
             byte ship = _humanFleet.ShipAt(x, y);
@@ -193,6 +209,16 @@ namespace MiniGames.App.Games
             if (ship > 0) return OwnShip;
             if (shot) return Miss;
             return Water;
+        }
+
+        private string OwnArt(int x, int y)
+        {
+            byte ship = _humanFleet.ShipAt(x, y);
+            bool shot = _humanFleet.ShotAt(x, y);
+            if (ship > 0 && shot) return "hit";
+            if (ship > 0) return "ship";
+            if (shot) return "miss";
+            return null;
         }
 
         private string StatusText()

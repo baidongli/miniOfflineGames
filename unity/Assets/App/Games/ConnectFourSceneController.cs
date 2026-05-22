@@ -120,6 +120,10 @@ namespace MiniGames.App.Games
                 for (int x = 0; x < W; x++)
                 {
                     byte v = _game.Board.Get(x, y);
+                    string art = v == ConnectFourBoard.PlayerA ? "disc_a"
+                               : v == ConnectFourBoard.PlayerB ? "disc_b" : null;
+                    if (art != null && Art.TryApply(_cells[x, y], "connect_four", art)) continue;
+                    Shapes.Circle(_cells[x, y]);
                     _cells[x, y].color = v == ConnectFourBoard.PlayerA ? DiscA
                                        : v == ConnectFourBoard.PlayerB ? DiscB
                                        : SlotEmpty;

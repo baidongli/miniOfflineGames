@@ -72,6 +72,7 @@ namespace MiniGames.App.Hub
                     case "bomb_sweep":     SceneManager.LoadScene("BombSweep");     return;
                     case "color_blocks":   SceneManager.LoadScene("ColorBlocks");   return;
                     case "maze_paint":     SceneManager.LoadScene("MazePaint");     return;
+                    case "battleship":     SceneManager.LoadScene("Battleship");    return;
                 }
             }
 

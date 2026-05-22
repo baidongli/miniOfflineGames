@@ -91,6 +91,9 @@ namespace MiniGames.App.Shared.Localization.Tables
             { "ig.fire_turn", "Your turn - tap enemy waters" },
             { "ig.enemy_firing", "Enemy firing..." },
             { "ig.bomb_vs", "You (blue) vs CPU (red)" },
+            { "ig.player_turn", "Player {0}'s turn" },
+            { "ig.player_tap", "Player {0} - tap to start your turn" },
+            { "ig.player_wins", "Player {0} wins!" },
 
             // How-to-play (one per game).
             { "howto.connect_four", "Tap a column to drop your disc. Get four in a row - across, down, or diagonally - before the computer." },

@@ -9,16 +9,18 @@ using UnityEngine.UI;
 namespace MiniGames.App.Games
 {
     /// <summary>
-    /// Solo Battleship vs the CPU. The shared BattleshipGame is built for the
-    /// asymmetric multiplayer protocol, so for solo this drives two boards
-    /// directly: the human's fleet, the CPU's fleet (hidden), plus a tracker
-    /// each. Fleets are auto-placed (Randomize to reshuffle, Start to begin).
-    /// One shot per turn: tap an enemy cell to fire, then the CPU fires back.
+    /// Battleship, two modes:
+    ///  - Solo: you vs a hunt/target CPU. Fleets auto-placed (Randomize/Start).
+    ///  - Same-device (hot-seat): two humans share the device. Fleets are
+    ///    auto-placed; turns alternate with a full-screen "pass the device"
+    ///    cover between them so neither player sees the other's board.
+    /// Two boards are driven directly (the shared BattleshipGame targets the
+    /// network protocol). One shot per turn.
     /// </summary>
     public sealed class BattleshipSceneController : MonoBehaviour
     {
-        [SerializeField] private RectTransform _enemyGrid;  // GridLayoutGroup, 10 cols (tap to fire)
-        [SerializeField] private RectTransform _ownGrid;    // GridLayoutGroup, 10 cols (your fleet)
+        [SerializeField] private RectTransform _enemyGrid;  // tap to fire (current player's tracker)
+        [SerializeField] private RectTransform _ownGrid;    // current player's own fleet
         [SerializeField] private TMP_Text _status;
         [SerializeField] private Button _backButton;
         [SerializeField] private Button _restartButton;
@@ -39,20 +41,28 @@ namespace MiniGames.App.Games
         private SimpleBattleshipAI _placer;
         private SimpleBattleshipAI _cpuAI;
 
-        private BattleshipBoard _humanFleet, _cpuFleet, _humanTracker, _cpuTracker;
+        private bool _vsCpu;
+        private readonly BattleshipBoard[] _fleet = new BattleshipBoard[2];
+        private readonly BattleshipBoard[] _tracker = new BattleshipBoard[2];
+        private int _current;        // current shooter (always 0 in solo)
+        private int _winner = -1;
         private Image[,] _enemyCells, _ownCells;
         private Phase _phase = Phase.Setup;
         private bool _busy;
+        private GameObject _passGate;
+        private TMP_Text _passLabel;
 
         private void Start()
         {
+            _vsCpu = !GameLaunch.SameDevice;
             _placer = new SimpleBattleshipAI(_rng.Next());
             _cpuAI = new SimpleBattleshipAI(_rng.Next());
 
-            _cpuFleet = new BattleshipBoard();
-            _cpuAI.PlaceFleet(_cpuFleet, _rng);
-            _cpuTracker = new BattleshipBoard();
-            RandomizeHumanFleet();
+            _fleet[0] = PlacedFleet();
+            _fleet[1] = PlacedFleet();
+            _tracker[0] = new BattleshipBoard();
+            _tracker[1] = new BattleshipBoard();
+            _current = 0;
 
             BuildGrid(_enemyGrid, ref _enemyCells, clickable: true);
             BuildGrid(_ownGrid, ref _ownCells, clickable: false);
@@ -68,26 +78,43 @@ namespace MiniGames.App.Games
             Loc.Label(_randomizeButton, "ui.randomize");
             Loc.Label(_startButton, "ui.start");
 
+            BuildPassGate(); // after StyleButtons so the cover isn't skinned (would leak corners)
+
+            if (_vsCpu)
+            {
+                _phase = Phase.Setup; // let the human reshuffle / start
+            }
+            else
+            {
+                // Hot-seat: fleets auto-placed, jump straight to play behind a pass cover.
+                _phase = Phase.Playing;
+                if (_randomizeButton != null) _randomizeButton.gameObject.SetActive(false);
+                if (_startButton != null) _startButton.gameObject.SetActive(false);
+            }
+
             RenderAll();
+            if (!_vsCpu) ShowPassGate(); // cover before Player 1's first turn
         }
 
-        private void RandomizeHumanFleet()
+        private BattleshipBoard PlacedFleet()
         {
-            _humanFleet = new BattleshipBoard();
-            _placer.PlaceFleet(_humanFleet, _rng);
-            _humanTracker = new BattleshipBoard();
+            var b = new BattleshipBoard();
+            _placer.PlaceFleet(b, _rng);
+            return b;
         }
 
+        // Solo setup only.
         private void OnRandomize()
         {
-            if (_phase != Phase.Setup) return;
-            RandomizeHumanFleet();
+            if (!_vsCpu || _phase != Phase.Setup) return;
+            _fleet[0] = PlacedFleet();
+            _tracker[0] = new BattleshipBoard();
             RenderAll();
         }
 
         private void OnStartBattle()
         {
-            if (_phase != Phase.Setup) return;
+            if (!_vsCpu || _phase != Phase.Setup) return;
             _phase = Phase.Playing;
             if (_randomizeButton != null) _randomizeButton.gameObject.SetActive(false);
             if (_startButton != null) _startButton.gameObject.SetActive(false);
@@ -122,22 +149,62 @@ namespace MiniGames.App.Games
             }
         }
 
+        private void BuildPassGate()
+        {
+            _passGate = new GameObject("PassGate", typeof(RectTransform), typeof(Image), typeof(Button));
+            var rt = (RectTransform)_passGate.transform;
+            rt.SetParent(transform, false);
+            rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero;
+            _passGate.GetComponent<Image>().color = new Color(0.06f, 0.08f, 0.12f, 1f);
+            _passGate.GetComponent<Button>().onClick.AddListener(HidePassGate);
+
+            var labelGo = new GameObject("Label", typeof(RectTransform));
+            var lrt = labelGo.GetComponent<RectTransform>();
+            lrt.SetParent(rt, false);
+            lrt.anchorMin = new Vector2(0.1f, 0.4f); lrt.anchorMax = new Vector2(0.9f, 0.6f);
+            lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
+            _passLabel = labelGo.AddComponent<TextMeshProUGUI>();
+            _passLabel.fontSize = 48;
+            _passLabel.alignment = TextAlignmentOptions.Center;
+            _passLabel.color = Color.white;
+            _passGate.SetActive(false);
+        }
+
+        private void ShowPassGate()
+        {
+            _passLabel.text = Loc.T("ig.player_tap", _current + 1);
+            _passGate.transform.SetAsLastSibling();
+            _passGate.SetActive(true);
+        }
+
+        private void HidePassGate() => _passGate.SetActive(false);
+
         // ---- play ----
 
         private void OnFire(int x, int y)
         {
             if (_phase != Phase.Playing || _busy) return;
-            if (_humanTracker.ShotAt(x, y)) return;
+            if (_passGate.activeSelf) return;
+            int shooter = _current, target = 1 - _current;
+            if (_tracker[shooter].ShotAt(x, y)) return;
 
-            var r = _cpuFleet.RegisterIncomingShot(x, y, out var kind, out var sunkCells);
-            _humanTracker.RecordShotResult(x, y, r);
-            if (r == ShotResult.Sunk) _humanTracker.RecordSunkShip(sunkCells, kind);
+            var r = _fleet[target].RegisterIncomingShot(x, y, out var kind, out var sunkCells);
+            _tracker[shooter].RecordShotResult(x, y, r);
+            if (r == ShotResult.Sunk) _tracker[shooter].RecordSunkShip(sunkCells, kind);
             Sfx.Play(r == ShotResult.Miss ? "miss" : r == ShotResult.Sunk ? "clear" : "hit");
             UiTween.Pop(_enemyCells[x, y].rectTransform);
 
-            if (_cpuFleet.AllShipsSunk()) { _phase = Phase.Over; RenderAll(); return; }
+            if (_fleet[target].AllShipsSunk())
+            {
+                _winner = shooter;
+                _phase = Phase.Over;
+                RenderAll();
+                return;
+            }
 
-            StartCoroutine(EnemyTurn());
+            if (_vsCpu) StartCoroutine(EnemyTurn());
+            else StartCoroutine(PassTurn());
         }
 
         private IEnumerator EnemyTurn()
@@ -146,35 +213,54 @@ namespace MiniGames.App.Games
             RenderAll();
             yield return new WaitForSeconds(0.5f);
 
-            var pick = _cpuAI.ChooseShot(_cpuTracker);
+            var pick = _cpuAI.ChooseShot(_tracker[1]);
             if (pick.HasValue)
             {
-                var r = _humanFleet.RegisterIncomingShot(pick.Value.x, pick.Value.y,
+                var r = _fleet[0].RegisterIncomingShot(pick.Value.x, pick.Value.y,
                     out var kind, out var sunkCells);
-                _cpuTracker.RecordShotResult(pick.Value.x, pick.Value.y, r);
-                if (r == ShotResult.Sunk) _cpuTracker.RecordSunkShip(sunkCells, kind);
+                _tracker[1].RecordShotResult(pick.Value.x, pick.Value.y, r);
+                if (r == ShotResult.Sunk) _tracker[1].RecordSunkShip(sunkCells, kind);
                 _cpuAI.RecordResult(r);
             }
 
-            if (_humanFleet.AllShipsSunk()) _phase = Phase.Over;
+            if (_fleet[0].AllShipsSunk()) { _winner = 1; _phase = Phase.Over; }
             _busy = false;
             RenderAll();
+        }
+
+        private IEnumerator PassTurn()
+        {
+            _busy = true;
+            RenderAll();                  // let the shooter see their result
+            yield return new WaitForSeconds(0.9f);
+            _current = 1 - _current;
+            _busy = false;
+            RenderAll();                  // render next player's view (hidden behind the gate)
+            ShowPassGate();
         }
 
         // ---- render ----
 
         private void RenderAll()
         {
+            int view = _vsCpu ? 0 : _current;  // whose perspective to draw
+            var tracker = _tracker[view];
+            var fleet = _fleet[view];
+
             for (int y = 0; y < N; y++)
                 for (int x = 0; x < N; x++)
                 {
-                    Paint(_enemyCells[x, y], EnemyArt(x, y), EnemyColor(x, y));
-                    Paint(_ownCells[x, y], OwnArt(x, y), OwnColor(x, y));
+                    Paint(_enemyCells[x, y], EnemyArt(tracker, x, y), EnemyColor(tracker, x, y));
+                    Paint(_ownCells[x, y], OwnArt(fleet, x, y), OwnColor(fleet, x, y));
                 }
             if (_status != null) _status.text = StatusText();
             if (_phase == Phase.Over)
-                GameOverlay.Show(StatusText(),
-                    _cpuFleet.AllShipsSunk() ? GameOverlay.Outcome.Win : GameOverlay.Outcome.Lose);
+            {
+                var outcome = _vsCpu
+                    ? (_winner == 0 ? GameOverlay.Outcome.Win : GameOverlay.Outcome.Lose)
+                    : GameOverlay.Outcome.Win;
+                GameOverlay.Show(StatusText(), outcome);
+            }
         }
 
         private static void Paint(Image img, string artName, Color color)
@@ -184,38 +270,38 @@ namespace MiniGames.App.Games
             img.color = color;
         }
 
-        private Color EnemyColor(int x, int y)
+        private static Color EnemyColor(BattleshipBoard tracker, int x, int y)
         {
-            byte ship = _humanTracker.ShipAt(x, y);
-            if (ship >= 1 && ship <= 5) return Sunk;     // confirmed sunk ship cell
-            if (ship == 255) return Hit;                 // hit, ship unknown
-            if (_humanTracker.ShotAt(x, y)) return Miss;
+            byte ship = tracker.ShipAt(x, y);
+            if (ship >= 1 && ship <= 5) return Sunk;
+            if (ship == 255) return Hit;
+            if (tracker.ShotAt(x, y)) return Miss;
             return Water;
         }
 
-        private string EnemyArt(int x, int y)
+        private static string EnemyArt(BattleshipBoard tracker, int x, int y)
         {
-            byte ship = _humanTracker.ShipAt(x, y);
-            if (ship >= 1 && ship <= 5) return "ship";   // sunk ship revealed
+            byte ship = tracker.ShipAt(x, y);
+            if (ship >= 1 && ship <= 5) return "ship";
             if (ship == 255) return "hit";
-            if (_humanTracker.ShotAt(x, y)) return "miss";
-            return null;                                  // water -> procedural
+            if (tracker.ShotAt(x, y)) return "miss";
+            return null;
         }
 
-        private Color OwnColor(int x, int y)
+        private static Color OwnColor(BattleshipBoard fleet, int x, int y)
         {
-            byte ship = _humanFleet.ShipAt(x, y);
-            bool shot = _humanFleet.ShotAt(x, y);
+            byte ship = fleet.ShipAt(x, y);
+            bool shot = fleet.ShotAt(x, y);
             if (ship > 0 && shot) return Hit;
             if (ship > 0) return OwnShip;
             if (shot) return Miss;
             return Water;
         }
 
-        private string OwnArt(int x, int y)
+        private static string OwnArt(BattleshipBoard fleet, int x, int y)
         {
-            byte ship = _humanFleet.ShipAt(x, y);
-            bool shot = _humanFleet.ShotAt(x, y);
+            byte ship = fleet.ShipAt(x, y);
+            bool shot = fleet.ShotAt(x, y);
             if (ship > 0 && shot) return "hit";
             if (ship > 0) return "ship";
             if (shot) return "miss";
@@ -224,14 +310,17 @@ namespace MiniGames.App.Games
 
         private string StatusText()
         {
-            switch (_phase)
+            if (_vsCpu)
             {
-                case Phase.Setup: return Loc.T("ig.place_fleet");
-                case Phase.Over:
-                    return _cpuFleet.AllShipsSunk() ? Loc.T("result.you_win") : Loc.T("result.you_lose");
-                default:
-                    return _busy ? Loc.T("ig.enemy_firing") : Loc.T("ig.fire_turn");
+                switch (_phase)
+                {
+                    case Phase.Setup: return Loc.T("ig.place_fleet");
+                    case Phase.Over: return _winner == 0 ? Loc.T("result.you_win") : Loc.T("result.you_lose");
+                    default: return _busy ? Loc.T("ig.enemy_firing") : Loc.T("ig.fire_turn");
+                }
             }
+            if (_phase == Phase.Over) return Loc.T("ig.player_wins", _winner + 1);
+            return Loc.T("ig.player_turn", _current + 1);
         }
     }
 }

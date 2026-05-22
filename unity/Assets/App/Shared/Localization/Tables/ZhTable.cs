@@ -91,6 +91,9 @@ namespace MiniGames.App.Shared.Localization.Tables
             { "ig.fire_turn", "你的回合 — 点击敌方海域" },
             { "ig.enemy_firing", "敌方开火中…" },
             { "ig.bomb_vs", "你（蓝）对 电脑（红）" },
+            { "ig.player_turn", "玩家{0} 回合" },
+            { "ig.player_tap", "玩家{0} — 点击开始你的回合" },
+            { "ig.player_wins", "玩家{0} 获胜！" },
 
             // 玩法说明（每个游戏一条）
             { "howto.connect_four", "点击某一列落子。抢在电脑之前,在横、竖或斜方向连成四子即获胜。" },

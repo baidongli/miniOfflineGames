@@ -82,8 +82,20 @@ namespace MiniGames.App.Games
 
         private void DoSwipe(SwipeDir dir)
         {
+            var before = new byte[N, N];
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++) before[x, y] = _game.Board.Get(x, y);
+
             if (_game.TrySwipe(dir, out var r))
+            {
                 Sfx.Play(r.ScoreGained > 0 ? "clear" : "move");
+                for (int y = 0; y < N; y++)
+                    for (int x = 0; x < N; x++)
+                    {
+                        byte after = _game.Board.Get(x, y);
+                        if (after != 0 && after != before[x, y]) UiTween.Pop(_cells[x, y].rectTransform);
+                    }
+            }
             Render();
         }
 

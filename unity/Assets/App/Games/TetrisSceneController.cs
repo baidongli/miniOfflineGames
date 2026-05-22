@@ -66,6 +66,7 @@ namespace MiniGames.App.Games
             if (_rotateButton != null) _rotateButton.onClick.AddListener(() => Act(() => _game.TryRotate(1)));
             if (_hardButton != null) _hardButton.onClick.AddListener(() => Act(() => { _game.HardDrop(); return true; }));
 
+            _game.Locked += OnLocked;
             _gravityTimer = ScoringRules.GravitySeconds(_game.Level);
             Render();
         }
@@ -101,6 +102,19 @@ namespace MiniGames.App.Games
                 _game.Tick();
                 _gravityTimer = ScoringRules.GravitySeconds(_game.Level);
                 AfterStateChange();
+            }
+        }
+
+        private void OnLocked(LockResult lr)
+        {
+            if (lr.LinesCleared > 0)
+            {
+                Sfx.Play("clear");
+                UiTween.Pop(_boardGrid, 0.94f, 0.14f); // whole-board "thump" on a clear
+            }
+            else
+            {
+                Sfx.Play("place");
             }
         }
 

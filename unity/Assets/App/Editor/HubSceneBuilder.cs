@@ -31,6 +31,16 @@ namespace MiniGames.App.Editor
         [MenuItem("MiniGames/Build Hub Scene")]
         public static void Build()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                EditorUtility.DisplayDialog(
+                    "Build Hub Scene",
+                    "Stop Play mode first - scenes can't be created while the " +
+                    "editor is playing.",
+                    "OK");
+                return;
+            }
+
             if (!EditorUtility.DisplayDialog(
                 "Build Hub Scene",
                 "This generates GameCard.prefab and Hub.unity (overwriting any " +

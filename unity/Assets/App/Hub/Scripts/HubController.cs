@@ -66,6 +66,7 @@ namespace MiniGames.App.Hub
                     case "reversi":      SceneManager.LoadScene("Reversi");     return;
                     case "number_merge":   SceneManager.LoadScene("NumberMerge");   return;
                     case "dots_and_boxes": SceneManager.LoadScene("DotsAndBoxes"); return;
+                    case "snakes":         SceneManager.LoadScene("Snakes");       return;
                 }
             }
 

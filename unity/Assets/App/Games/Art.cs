@@ -89,6 +89,7 @@ namespace MiniGames.App.Games
                 var img = (b.targetGraphic as Image) ?? b.GetComponent<Image>();
                 if (img == null) continue;
                 if (!ApplyButton(img)) Shapes.Rounded(img);
+                if (b.GetComponent<ButtonPress>() == null) b.gameObject.AddComponent<ButtonPress>();
             }
         }
 

@@ -107,6 +107,7 @@ namespace MiniGames.App.Games
                     go.transform.SetParent(parent, false);
                     var img = go.GetComponent<Image>();
                     img.color = Water;
+                    Shapes.Rounded(img);
                     if (clickable)
                     {
                         var btn = go.AddComponent<Button>();

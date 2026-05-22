@@ -85,6 +85,7 @@ namespace MiniGames.App.Games
                     cellGo.transform.SetParent(_boardGrid, false);
                     var img = cellGo.GetComponent<Image>();
                     img.color = SlotEmpty;
+                    Shapes.Circle(img);
                     var btn = cellGo.GetComponent<Button>();
                     btn.targetGraphic = img;
                     btn.onClick.AddListener(() => OnColumnTapped(col));

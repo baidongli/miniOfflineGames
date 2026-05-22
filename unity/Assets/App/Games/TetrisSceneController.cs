@@ -159,6 +159,7 @@ namespace MiniGames.App.Games
                     go.transform.SetParent(_boardGrid, false);
                     var img = go.GetComponent<Image>();
                     img.color = Empty;
+                    Shapes.Rounded(img);
                     _cells[x, y] = img;
                 }
             }

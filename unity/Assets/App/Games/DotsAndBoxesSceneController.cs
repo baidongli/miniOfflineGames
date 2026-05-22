@@ -148,6 +148,7 @@ namespace MiniGames.App.Games
                     var img = NewCell($"Dot_{x}_{y}", Dot(x, y),
                         new Vector2(dotSize, dotSize), out _);
                     img.color = DotColor;
+                    Shapes.Circle(img);
                 }
         }
 
@@ -163,6 +164,7 @@ namespace MiniGames.App.Games
             var img = go.GetComponent<Image>();
             button = go.GetComponent<Button>();
             button.targetGraphic = img;
+            Shapes.Rounded(img); // edges read as rounded bars; dots overridden to circles
             return img;
         }
 

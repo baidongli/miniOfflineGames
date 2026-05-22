@@ -91,6 +91,7 @@ namespace MiniGames.App.Games
                     var img = go.GetComponent<Image>();
                     img.raycastTarget = false; // pieces are dragged from the hand, not the board
                     img.color = SlotEmpty;
+                    Shapes.Rounded(img);
                     _cells[x, y] = img;
                 }
             }
@@ -223,6 +224,7 @@ namespace MiniGames.App.Games
                     var img = go.GetComponent<Image>();
                     img.raycastTarget = false; // let drags hit the slot
                     img.color = ColorFor(shape.ColorId);
+                    Shapes.Rounded(img);
                 }
             }
         }

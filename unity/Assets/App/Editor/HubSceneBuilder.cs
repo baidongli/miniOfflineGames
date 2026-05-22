@@ -107,15 +107,30 @@ namespace MiniGames.App.Editor
             so.FindProperty("_sameDeviceBadge").objectReferenceValue = sdGo;
             so.ApplyModifiedPropertiesWithoutUndo();
 
-            var saved = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+            PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             Object.DestroyImmediate(root);
-            return saved.GetComponent<GameCardView>();
+
+            // Re-load from disk: the object returned by SaveAsPrefabAsset can
+            // hand back a null component before the import settles, which would
+            // wire a null _cardPrefab into the Hub.
+            AssetDatabase.SaveAssets();
+            AssetDatabase.ImportAsset(PrefabPath);
+            var reloaded = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            var prefabView = reloaded != null ? reloaded.GetComponent<GameCardView>() : null;
+            if (prefabView == null)
+                throw new System.Exception(
+                    "GameCard prefab failed to save with a GameCardView component.");
+            return prefabView;
         }
 
         // ---- Hub scene ------------------------------------------------------
 
         private static void BuildHubScene(GameCardView cardPrefab)
         {
+            if (cardPrefab == null)
+                throw new System.ArgumentNullException(nameof(cardPrefab),
+                    "Card prefab is null; aborting before building a broken Hub scene.");
+
             var scene = EditorSceneManager.NewScene(
                 NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
 

@@ -36,9 +36,16 @@ namespace MiniGames.App.Hub
             var visual = GameVisuals.For(module.Id);
             if (_icon != null)
             {
-                _icon.color = visual.Color;
-                MiniGames.App.Games.Shapes.Circle(_icon); // round emblem (color + glyph)
-                EnsureGlyph().text = visual.Glyph;
+                if (MiniGames.App.Games.Art.TryApply(_icon, module.Id, "icon"))
+                {
+                    EnsureGlyph().text = ""; // real artwork: drop the placeholder glyph
+                }
+                else
+                {
+                    _icon.color = visual.Color;
+                    MiniGames.App.Games.Shapes.Circle(_icon); // round emblem (color + glyph)
+                    EnsureGlyph().text = visual.Glyph;
+                }
             }
 
             // Personal best (score games only; turn-based games never store one).

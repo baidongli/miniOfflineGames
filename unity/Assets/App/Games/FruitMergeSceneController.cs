@@ -123,12 +123,27 @@ namespace MiniGames.App.Games
                 for (int x = 0; x < _w; x++)
                 {
                     byte t = _game.Grid.Get(x, y);
-                    _cells[x, y].color = ColorFor(t);
-                    _labels[x, y].text = t == 0 ? "" : t.ToString();
-                    _labels[x, y].color = new Color(0.1f, 0.1f, 0.12f);
+                    if (t != 0 && Art.TryApply(_cells[x, y], "fruit_merge", $"tier{t}"))
+                    {
+                        _labels[x, y].text = ""; // real fruit art: hide the tier number
+                    }
+                    else
+                    {
+                        Shapes.Circle(_cells[x, y]);
+                        _cells[x, y].color = ColorFor(t);
+                        _labels[x, y].text = t == 0 ? "" : t.ToString();
+                        _labels[x, y].color = new Color(0.1f, 0.1f, 0.12f);
+                    }
                 }
 
-            if (_nextSwatch != null) _nextSwatch.color = ColorFor(_game.NextFruit);
+            if (_nextSwatch != null)
+            {
+                if (!Art.TryApply(_nextSwatch, "fruit_merge", $"tier{_game.NextFruit}"))
+                {
+                    Shapes.Circle(_nextSwatch);
+                    _nextSwatch.color = ColorFor(_game.NextFruit);
+                }
+            }
             if (_status != null) _status.text = StatusText();
             if (_game.IsGameOver)
             {

@@ -80,7 +80,7 @@ namespace MiniGames.App.Games
             panelRt.sizeDelta = new Vector2(860f, 720f);
             var panelImg = panelGo.AddComponent<Image>();
             panelImg.color = Panel;
-            Shapes.Rounded(panelImg);
+            if (!Art.ApplyPanel(panelImg)) Shapes.Rounded(panelImg);
 
             var titleGo = NewUI("Title", panelRt, out var titleRt);
             titleRt.anchorMin = new Vector2(0f, 1f);
@@ -112,7 +112,7 @@ namespace MiniGames.App.Games
             closeRt.anchoredPosition = new Vector2(0f, 36f);
             var closeImg = closeGo.AddComponent<Image>();
             closeImg.color = Accent;
-            Shapes.Rounded(closeImg);
+            if (!Art.ApplyButton(closeImg)) Shapes.Rounded(closeImg);
             closeGo.AddComponent<Button>().onClick.AddListener(() => Destroy(gameObject));
             var closeLabelGo = NewUI("Label", closeRt, out var clrt);
             Stretch(clrt);

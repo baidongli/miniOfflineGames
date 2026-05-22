@@ -65,6 +65,7 @@ namespace MiniGames.App.Games
             if (_bombButton != null) _bombButton.onClick.AddListener(() => _bombQueued = true);
             Loc.Label(_backButton, "ui.back");
             InstructionsOverlay.AttachButton((RectTransform)transform, "bomb_sweep");
+            Art.StyleButtons((RectTransform)transform);
             Loc.Label(_restartButton, "ui.restart");
             Loc.Label(_bombButton, "ui.bomb");
             if (_upButton != null) Loc.Label(_upButton.GetComponent<Button>(), "ui.up");

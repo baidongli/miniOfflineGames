@@ -61,7 +61,9 @@ namespace MiniGames.App.Games
             _panel.anchorMin = _panel.anchorMax = new Vector2(0.5f, 0.5f);
             _panel.pivot = new Vector2(0.5f, 0.5f);
             _panel.sizeDelta = new Vector2(740f, 560f);
-            panelGo.AddComponent<Image>().color = Panel;
+            var panelImg = panelGo.AddComponent<Image>();
+            panelImg.color = Panel;
+            if (!Art.ApplyPanel(panelImg)) Shapes.Rounded(panelImg);
 
             var titleGo = NewUI("Title", _panel, out var titleRt);
             titleRt.anchorMin = new Vector2(0f, 1f);
@@ -83,6 +85,7 @@ namespace MiniGames.App.Games
             MakeButton("Home", _panel, Loc.T("ui.home"), -360f, Home,
                 () => SceneManager.LoadScene("Hub"));
 
+            Art.StyleButtons(_panel);
             StartCoroutine(Animate());
         }
 

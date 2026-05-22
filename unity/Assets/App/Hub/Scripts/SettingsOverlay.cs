@@ -55,7 +55,9 @@ namespace MiniGames.App.Hub
             panelRt.anchorMin = panelRt.anchorMax = new Vector2(0.5f, 0.5f);
             panelRt.pivot = new Vector2(0.5f, 0.5f);
             panelRt.sizeDelta = new Vector2(740f, 640f);
-            panelGo.AddComponent<Image>().color = Panel;
+            var panelImg = panelGo.AddComponent<Image>();
+            panelImg.color = Panel;
+            if (!Art.ApplyPanel(panelImg)) Shapes.Rounded(panelImg);
 
             _titleLabel = MakeTitle(panelRt);
 
@@ -69,6 +71,7 @@ namespace MiniGames.App.Hub
             MakeButton("Close", panelRt, -490f, Close, () => Destroy(gameObject))
                 .GetComponentInChildren<TMP_Text>().name = "CloseLabel";
 
+            Art.StyleButtons(panelRt);
             RefreshTexts();
         }
 

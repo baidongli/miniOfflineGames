@@ -66,3 +66,102 @@ unity/Assets/Resources/Art/Games/fruit_merge/tier11.png  (watermelon)
 
 Press Play — the fruit and the Hub logo are used automatically. Delete a file
 and it reverts to the procedural circle. No rebuild required.
+
+---
+
+# Shared UI art (buttons & popups)
+
+The same drop-in system covers the common UI chrome. Files go in:
+
+```
+unity/Assets/Resources/Art/UI/<name>.png
+```
+
+| File | Used for | Notes |
+|------|----------|-------|
+| `button.png` | every button (Back, Restart, Rotate, Bomb, D-pad, Play Again, Home, Close, Solo/Same-device, ?, …) | A **white/neutral** rounded button shape. It's **tinted** by each button's color, so color coding survives. Make it 9-sliceable (see below). |
+| `panel.png` | every popup window (game-over, settings, instructions, mode-select) | Shown as-is (its own colors). The window frame. |
+
+If you don't add these, buttons fall back to rounded rectangles and panels to
+rounded dark cards (what you see now).
+
+### 9-slice (important for buttons & panels)
+
+Buttons and panels stretch to many sizes. To keep corners crisp:
+
+1. Select the imported PNG in Unity → Inspector.
+2. **Texture Type = Sprite (2D and UI)** → **Sprite Editor** → drag the green
+   **border** lines in from each edge (e.g. 24 px) so the corners don't stretch.
+3. Apply.
+
+If you skip this the image still works, it just stretches uniformly — fine for
+flat or gradient designs, not for ones with rounded corners or borders.
+
+---
+
+# AI image-generation workflow
+
+A repeatable way to produce every asset with an AI image tool (Midjourney /
+DALL·E / Stable Diffusion / Firefly).
+
+### 1. Lock a style first
+
+Generate ONE reference (e.g. the Fruit Merge icon) until you like it, then reuse
+the **same style sentence** in every prompt so the whole app matches. A good
+generic style block:
+
+> *flat vector game art, soft rounded shapes, bright saturated palette, subtle
+> top-down gradient, thick clean outline, centered, on a transparent
+> background, mobile game asset, no text, no shadow on the ground*
+
+### 2. Output rules (apply to every image)
+
+- **Format:** PNG with **transparent background** (alpha).
+- **Shape:** square canvas (1:1). Icons/discs/tiles ~**512×512**; UI button/panel
+  ~**512×512** too (they get 9-sliced).
+- **Framing:** subject centered, small margin, nothing cropped at edges.
+- **No text** baked in (the app draws numbers/labels itself).
+- One subject per image.
+
+### 3. Prompt template
+
+```
+<subject>, <style block from step 1>, square, transparent background, no text
+```
+
+Examples:
+
+| Asset | `<subject>` |
+|-------|-------------|
+| fruit_merge/tier1 | a small red cherry |
+| fruit_merge/tier6 | a green kiwi slice |
+| fruit_merge/tier11 | a watermelon |
+| fruit_merge/icon | app icon: a stack of merging fruit |
+| snakes/head | a cute green snake head facing right |
+| snakes/food | a shiny red apple |
+| connect_four/disc_a | a glossy red game disc, top-down |
+| reversi/disc_black | a glossy black othello disc, top-down |
+| number_merge/tile_2048 | a rounded golden "2048" game tile **(no number text)** |
+| tetris/block_i | a glossy cyan square game block |
+| bomb_sweep/bomb | a classic round black cartoon bomb with a lit fuse |
+| bomb_sweep/explosion | a bright orange cartoon explosion burst |
+| battleship/ship | a top-down grey warship segment |
+| UI/button | a blank rounded rectangle button, white, soft bevel |
+| UI/panel | a rounded popup window panel, dark blue, soft border |
+
+### 4. Drop in & check
+
+1. Save each file with the **exact name** from the tables above, into the right
+   folder (`Resources/Art/Games/<id>/` or `Resources/Art/UI/`).
+2. (Recommended) set Texture Type = Sprite; for `button`/`panel` set 9-slice
+   borders.
+3. Press Play. Art appears automatically — no code, no rebuild.
+4. Commit: `git add unity/Assets/Resources/Art` (includes the `.meta` files).
+
+### 5. Batch tips
+
+- Do one game's full set in a single session so the style stays consistent.
+- For `number_merge` tiles and `tetris` blocks, generate one and recolor copies
+  if your tool supports it — they're the same shape, different color.
+- Keep the source/large versions somewhere outside the project; only the final
+  PNGs need to live under `Resources/`.

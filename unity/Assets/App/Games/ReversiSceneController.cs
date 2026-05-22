@@ -51,6 +51,7 @@ namespace MiniGames.App.Games
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             Loc.Label(_backButton, "ui.back");
             InstructionsOverlay.AttachButton((RectTransform)transform, "reversi");
+            Art.StyleButtons((RectTransform)transform);
 
             _game.Moved += r =>
             {

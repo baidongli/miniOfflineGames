@@ -59,6 +59,7 @@ namespace MiniGames.App.Games
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("FruitMerge"));
             Loc.Label(_backButton, "ui.back");
             InstructionsOverlay.AttachButton((RectTransform)transform, "fruit_merge");
+            Art.StyleButtons((RectTransform)transform);
             Loc.Label(_restartButton, "ui.restart");
 
             _game.Dropped += _ => Render();

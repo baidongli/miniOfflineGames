@@ -37,6 +37,12 @@ namespace MiniGames.App.Hub
             RenderEnergy();
             RelocalizeChrome();
             MiniGames.App.Games.Loc.LanguageChanged += RelocalizeChrome;
+
+            MiniGames.App.Games.Art.StyleButtons((RectTransform)transform);
+            var msPanel = _modeSelect != null
+                ? _modeSelect.transform.Find("Panel")?.GetComponent<Image>() : null;
+            if (msPanel != null && !MiniGames.App.Games.Art.ApplyPanel(msPanel))
+                MiniGames.App.Games.Shapes.Rounded(msPanel);
         }
 
         private void OnDestroy() => MiniGames.App.Games.Loc.LanguageChanged -= RelocalizeChrome;

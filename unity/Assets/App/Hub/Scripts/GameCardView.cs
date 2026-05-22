@@ -29,7 +29,9 @@ namespace MiniGames.App.Hub
         {
             _module = module;
             _onTap = onTap;
-            _title.text = module.DisplayName;
+            _title.text = Loc.T($"game.{module.Id}.title");
+            Loc.LanguageChanged -= Relocalize;
+            Loc.LanguageChanged += Relocalize;
 
             var visual = GameVisuals.For(module.Id);
             if (_icon != null)
@@ -50,6 +52,13 @@ namespace MiniGames.App.Hub
 
         // Creates (once) a centered glyph label on top of the icon so cards
         // read at a glance. Runtime-built so the existing prefab needs no edit.
+        private void Relocalize()
+        {
+            if (_module != null && _title != null) _title.text = Loc.T($"game.{_module.Id}.title");
+        }
+
+        private void OnDestroy() => Loc.LanguageChanged -= Relocalize;
+
         private TMP_Text EnsureGlyph()
         {
             if (_glyphLabel != null) return _glyphLabel;

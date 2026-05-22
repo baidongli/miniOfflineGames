@@ -78,9 +78,9 @@ namespace MiniGames.App.Games
             title.alignment = TextAlignmentOptions.Center;
             title.color = Color.white;
 
-            MakeButton("PlayAgain", _panel, "Play Again", -200f, Accent,
+            MakeButton("PlayAgain", _panel, Loc.T("ui.play_again"), -200f, Accent,
                 () => SceneManager.LoadScene(SceneManager.GetActiveScene().name));
-            MakeButton("Home", _panel, "Home", -360f, Home,
+            MakeButton("Home", _panel, Loc.T("ui.home"), -360f, Home,
                 () => SceneManager.LoadScene("Hub"));
 
             StartCoroutine(Animate());

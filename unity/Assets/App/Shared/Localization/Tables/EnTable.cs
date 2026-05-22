@@ -49,6 +49,14 @@ namespace MiniGames.App.Shared.Localization.Tables
             { "ui.rematch", "Rematch" },
             { "ui.resign", "Resign" },
             { "ui.pass", "Pass" },
+            { "ui.close", "Close" },
+            { "ui.restart", "Restart" },
+            { "ui.play_again", "Play Again" },
+            { "ui.home", "Home" },
+            { "ui.menu", "Menu" },
+            { "ui.remove_ads", "Remove Ads" },
+            { "ui.sound_on", "Sound: On" },
+            { "ui.sound_off", "Sound: Off" },
 
             // Play modes.
             { "mode.solo", "Solo" },

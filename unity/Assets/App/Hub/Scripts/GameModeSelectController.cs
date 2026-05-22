@@ -1,4 +1,5 @@
 using System;
+using MiniGames.App.Games;
 using MiniGames.GameModule;
 using TMPro;
 using UnityEngine;
@@ -25,11 +26,22 @@ namespace MiniGames.App.Hub
         public void Show(IGameModule module)
         {
             _module = module;
-            _title.text = module.DisplayName;
+            _title.text = Loc.T($"game.{module.Id}.title");
+            SetLabel(_soloButton, "mode.solo");
+            SetLabel(_sameDeviceButton, "mode.same_device");
+            SetLabel(_nearbyButton, "mode.nearby_host");
+            SetLabel(_closeButton, "ui.close");
             _soloButton.gameObject.SetActive((module.Capabilities & GameCapabilities.Solo) != 0);
             _sameDeviceButton.gameObject.SetActive((module.Capabilities & GameCapabilities.SameDevice) != 0);
             _nearbyButton.gameObject.SetActive((module.Capabilities & GameCapabilities.Multiplayer) != 0);
             gameObject.SetActive(true);
+        }
+
+        private static void SetLabel(Button button, string key)
+        {
+            if (button == null) return;
+            var label = button.GetComponentInChildren<TMP_Text>();
+            if (label != null) label.text = Loc.T(key);
         }
 
         private void Awake()

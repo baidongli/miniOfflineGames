@@ -35,6 +35,23 @@ namespace MiniGames.App.Hub
                 _modeSelect.ModeChosen += OnModeChosen;
             }
             RenderEnergy();
+            RelocalizeChrome();
+            MiniGames.App.Games.Loc.LanguageChanged += RelocalizeChrome;
+        }
+
+        private void OnDestroy() => MiniGames.App.Games.Loc.LanguageChanged -= RelocalizeChrome;
+
+        private void RelocalizeChrome()
+        {
+            SetButtonLabel(_menuButton, "ui.menu");
+            SetButtonLabel(_removeAdsButton, "ui.remove_ads");
+        }
+
+        private static void SetButtonLabel(Button button, string key)
+        {
+            if (button == null) return;
+            var label = button.GetComponentInChildren<TMPro.TMP_Text>();
+            if (label != null) label.text = MiniGames.App.Games.Loc.T(key);
         }
 
         private void RenderEnergy()

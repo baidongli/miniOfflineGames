@@ -49,6 +49,14 @@ namespace MiniGames.App.Shared.Localization.Tables
             { "ui.rematch", "再来一局" },
             { "ui.resign", "认输" },
             { "ui.pass", "跳过" },
+            { "ui.close", "关闭" },
+            { "ui.restart", "重玩" },
+            { "ui.play_again", "再玩一次" },
+            { "ui.home", "主页" },
+            { "ui.menu", "菜单" },
+            { "ui.remove_ads", "去广告" },
+            { "ui.sound_on", "音效：开" },
+            { "ui.sound_off", "音效：关" },
 
             // 模式
             { "mode.solo", "单人" },

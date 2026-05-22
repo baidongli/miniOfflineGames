@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using MiniGames.App.Bootstrap;
 using MiniGames.GameModule;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace MiniGames.App.Hub
 {
     /// <summary>
     /// Top-level Hub screen: shows the game grid, energy bar, remove-ads CTA.
-    /// View references are wired in the Inspector. This script handles input
-    /// and delegates navigation to AppNavigator (TBD).
+    /// View references are wired in the Inspector. Tapping a card opens the
+    /// mode-select modal; choosing a mode routes into the matching game scene.
     /// </summary>
     public sealed class HubController : MonoBehaviour
     {
@@ -19,6 +20,7 @@ namespace MiniGames.App.Hub
         [SerializeField] private Button _menuButton;
         [SerializeField] private Button _removeAdsButton;
         [SerializeField] private EnergyBarView _energyBar;
+        [SerializeField] private GameModeSelectController _modeSelect;
 
         private readonly List<GameCardView> _cards = new List<GameCardView>();
 
@@ -27,6 +29,11 @@ namespace MiniGames.App.Hub
             BuildGameGrid();
             _menuButton.onClick.AddListener(OnMenu);
             _removeAdsButton.onClick.AddListener(OnRemoveAds);
+            if (_modeSelect != null)
+            {
+                _modeSelect.gameObject.SetActive(false);
+                _modeSelect.ModeChosen += OnModeChosen;
+            }
         }
 
         private void BuildGameGrid()
@@ -41,8 +48,23 @@ namespace MiniGames.App.Hub
 
         private void OnGameCardTapped(IGameModule module)
         {
-            Debug.Log($"[Hub] selected {module.Id}");
-            // TODO: route to GameModeSelectScreen (solo / multiplayer / same-device)
+            if (_modeSelect != null) _modeSelect.Show(module);
+            else Debug.Log($"[Hub] selected {module.Id} (no mode-select wired)");
+        }
+
+        private void OnModeChosen(IGameModule module, GameMode mode)
+        {
+            _modeSelect.gameObject.SetActive(false);
+
+            // Only Connect Four solo is wired into a scene so far; everything
+            // else logs until its scene exists.
+            if (module.Id == "connect_four" && mode == GameMode.Solo)
+            {
+                SceneManager.LoadScene("ConnectFour");
+                return;
+            }
+
+            Debug.Log($"[Hub] {module.DisplayName} / {mode} not implemented yet");
         }
 
         private void OnMenu()

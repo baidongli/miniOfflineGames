@@ -241,6 +241,46 @@ namespace MiniGames.App.Editor
             scroll.viewport = viewportRt;
             scroll.content = contentRt;
 
+            // Mode-select modal (hidden at runtime by HubController; shown on
+            // card tap). Full-screen dim + a centered panel of mode buttons.
+            var modalGo = NewUI("ModeSelect", canvas.transform as RectTransform, out var modalRt);
+            Stretch(modalRt);
+            modalGo.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.6f);
+            var modeSelect = modalGo.AddComponent<GameModeSelectController>();
+
+            var panelGo = NewUI("Panel", modalRt, out var panelRt);
+            panelRt.anchorMin = panelRt.anchorMax = new Vector2(0.5f, 0.5f);
+            panelRt.pivot = new Vector2(0.5f, 0.5f);
+            panelRt.sizeDelta = new Vector2(640f, 820f);
+            panelRt.anchoredPosition = Vector2.zero;
+            panelGo.AddComponent<Image>().color = new Color(0.16f, 0.18f, 0.26f);
+
+            var modalTitleGo = NewUI("Title", panelRt, out var modalTitleRt);
+            modalTitleRt.anchorMin = new Vector2(0f, 1f);
+            modalTitleRt.anchorMax = new Vector2(1f, 1f);
+            modalTitleRt.pivot = new Vector2(0.5f, 1f);
+            modalTitleRt.sizeDelta = new Vector2(-40f, 120f);
+            modalTitleRt.anchoredPosition = new Vector2(0f, -24f);
+            var modalTitle = modalTitleGo.AddComponent<TextMeshProUGUI>();
+            modalTitle.text = "Game";
+            modalTitle.fontSize = 48;
+            modalTitle.alignment = TextAlignmentOptions.Center;
+            modalTitle.color = Color.white;
+
+            var soloBtn = MakeCenteredButton("SoloButton", panelRt, "Solo", -200f);
+            var sameBtn = MakeCenteredButton("SameDeviceButton", panelRt, "Same Device", -340f);
+            var nearbyBtn = MakeCenteredButton("NearbyButton", panelRt, "Nearby", -480f);
+            var closeBtn = MakeCenteredButton("CloseButton", panelRt, "Close", -660f);
+
+            var msSo = new SerializedObject(modeSelect);
+            msSo.FindProperty("_title").objectReferenceValue = modalTitle;
+            msSo.FindProperty("_soloButton").objectReferenceValue = soloBtn;
+            msSo.FindProperty("_sameDeviceButton").objectReferenceValue = sameBtn;
+            msSo.FindProperty("_nearbyButton").objectReferenceValue = nearbyBtn;
+            msSo.FindProperty("_closeButton").objectReferenceValue = closeBtn;
+            msSo.ApplyModifiedProperties();
+            EditorUtility.SetDirty(modeSelect);
+
             // Re-load the prefab now, inside this scene, so the reference is
             // owned by the live AssetDatabase rather than carried across the
             // NewScene() boundary (which can stale it out).
@@ -257,8 +297,11 @@ namespace MiniGames.App.Editor
             hubSo.FindProperty("_menuButton").objectReferenceValue = menuButton;
             hubSo.FindProperty("_removeAdsButton").objectReferenceValue = removeAdsButton;
             hubSo.FindProperty("_energyBar").objectReferenceValue = energyView;
+            hubSo.FindProperty("_modeSelect").objectReferenceValue = modeSelect;
             hubSo.ApplyModifiedProperties();
             EditorUtility.SetDirty(hub);
+
+            modalGo.SetActive(false);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, ScenePath);
@@ -287,7 +330,8 @@ namespace MiniGames.App.Editor
             var so = new SerializedObject(hub);
             var fields = new[]
             {
-                "_gameGrid", "_cardPrefab", "_menuButton", "_removeAdsButton", "_energyBar"
+                "_gameGrid", "_cardPrefab", "_menuButton", "_removeAdsButton",
+                "_energyBar", "_modeSelect"
             };
             var missing = new System.Collections.Generic.List<string>();
             foreach (var f in fields)
@@ -321,6 +365,29 @@ namespace MiniGames.App.Editor
             var text = labelGo.AddComponent<TextMeshProUGUI>();
             text.text = label;
             text.fontSize = 28;
+            text.alignment = TextAlignmentOptions.Center;
+            text.color = Color.white;
+            return button;
+        }
+
+        private static Button MakeCenteredButton(string name, RectTransform parent,
+            string label, float y)
+        {
+            var go = NewUI(name, parent, out var rt);
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+            rt.pivot = new Vector2(0.5f, 1f);
+            rt.sizeDelta = new Vector2(480f, 110f);
+            rt.anchoredPosition = new Vector2(0f, y);
+            var img = go.AddComponent<Image>();
+            img.color = Accent;
+            var button = go.AddComponent<Button>();
+            button.targetGraphic = img;
+
+            var labelGo = NewUI("Label", rt, out var labelRt);
+            Stretch(labelRt);
+            var text = labelGo.AddComponent<TextMeshProUGUI>();
+            text.text = label;
+            text.fontSize = 34;
             text.alignment = TextAlignmentOptions.Center;
             text.color = Color.white;
             return button;

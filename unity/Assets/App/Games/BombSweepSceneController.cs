@@ -63,6 +63,13 @@ namespace MiniGames.App.Games
             if (_backButton != null) _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("BombSweep"));
             if (_bombButton != null) _bombButton.onClick.AddListener(() => _bombQueued = true);
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_restartButton, "ui.restart");
+            Loc.Label(_bombButton, "ui.bomb");
+            if (_upButton != null) Loc.Label(_upButton.GetComponent<Button>(), "ui.up");
+            if (_downButton != null) Loc.Label(_downButton.GetComponent<Button>(), "ui.down");
+            if (_leftButton != null) Loc.Label(_leftButton.GetComponent<Button>(), "ui.left");
+            if (_rightButton != null) Loc.Label(_rightButton.GetComponent<Button>(), "ui.right");
 
             Render();
             StartCoroutine(TickLoop());
@@ -166,11 +173,11 @@ namespace MiniGames.App.Games
             bool cpu = _state.Players[1].IsAlive;
             if (_over)
             {
-                if (you && !cpu) return "You win!";
-                if (!you && cpu) return "You lose";
-                return "Draw";
+                if (you && !cpu) return Loc.T("result.you_win");
+                if (!you && cpu) return Loc.T("result.you_lose");
+                return Loc.T("result.draw");
             }
-            return "You (blue) vs CPU (red)";
+            return Loc.T("ig.bomb_vs");
         }
     }
 }

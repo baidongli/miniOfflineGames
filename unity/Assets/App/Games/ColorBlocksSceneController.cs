@@ -61,6 +61,8 @@ namespace MiniGames.App.Games
             BuildSlots();
             if (_backButton != null) _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("ColorBlocks"));
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_restartButton, "ui.restart");
 
             RenderBoard();
             RenderHand();
@@ -228,13 +230,12 @@ namespace MiniGames.App.Games
         private void RenderStatus()
         {
             if (_status == null) return;
-            _status.text = _game.IsGameOver
-                ? $"Game Over   Score {_game.Score}"
-                : $"Score {_game.Score}";
+            string over = $"{Loc.T("result.game_over")}   {Loc.T("ig.score")} {_game.Score}";
+            _status.text = _game.IsGameOver ? over : $"{Loc.T("ig.score")} {_game.Score}";
             if (_game.IsGameOver)
             {
                 bool rec = BestScores.Report("color_blocks", _game.Score);
-                GameOverlay.Show($"Game Over   Score {_game.Score}" + BestScores.Suffix("color_blocks", rec));
+                GameOverlay.Show(over + BestScores.Suffix("color_blocks", rec));
             }
         }
 

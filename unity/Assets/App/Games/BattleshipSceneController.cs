@@ -61,6 +61,10 @@ namespace MiniGames.App.Games
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("Battleship"));
             if (_randomizeButton != null) _randomizeButton.onClick.AddListener(OnRandomize);
             if (_startButton != null) _startButton.onClick.AddListener(OnStartBattle);
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_restartButton, "ui.restart");
+            Loc.Label(_randomizeButton, "ui.randomize");
+            Loc.Label(_startButton, "ui.start");
 
             RenderAll();
         }
@@ -193,11 +197,11 @@ namespace MiniGames.App.Games
         {
             switch (_phase)
             {
-                case Phase.Setup: return "Place your fleet: Randomize or Start";
+                case Phase.Setup: return Loc.T("ig.place_fleet");
                 case Phase.Over:
-                    return _cpuFleet.AllShipsSunk() ? "You win!" : "You lose";
+                    return _cpuFleet.AllShipsSunk() ? Loc.T("result.you_win") : Loc.T("result.you_lose");
                 default:
-                    return _busy ? "Enemy firing..." : "Your turn - tap enemy waters";
+                    return _busy ? Loc.T("ig.enemy_firing") : Loc.T("ig.fire_turn");
             }
         }
     }

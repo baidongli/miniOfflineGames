@@ -1,6 +1,8 @@
 using System;
 using MiniGames.App.Shared.Localization;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace MiniGames.App.Games
 {
@@ -37,6 +39,14 @@ namespace MiniGames.App.Games
         }
 
         public static void Toggle() => Set(Language == "zh" ? "en" : "zh");
+
+        /// <summary>Set a Button's child label to a localized string.</summary>
+        public static void Label(Button button, string key, params object[] args)
+        {
+            if (button == null) return;
+            var label = button.GetComponentInChildren<TMP_Text>();
+            if (label != null) label.text = T(key, args);
+        }
 
         private static string DetectDefault()
         {

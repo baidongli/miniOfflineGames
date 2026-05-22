@@ -51,6 +51,8 @@ namespace MiniGames.App.Games
             BuildCells();
             if (_backButton != null) _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("MazePaint"));
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_restartButton, "ui.restart");
 
             Render();
             StartCoroutine(TickLoop());
@@ -144,9 +146,8 @@ namespace MiniGames.App.Games
         {
             int owned = _state.Board.CountOwned(0);
             int pct = Mathf.RoundToInt(100f * owned / (_n * _n));
-            return _over
-                ? $"Game Over   Territory {owned} ({pct}%)"
-                : $"Territory {owned} ({pct}%)";
+            string body = $"{Loc.T("ig.territory")} {owned} ({pct}%)";
+            return _over ? $"{Loc.T("result.game_over")}   {body}" : body;
         }
     }
 }

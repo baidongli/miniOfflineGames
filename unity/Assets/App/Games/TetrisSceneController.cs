@@ -65,6 +65,11 @@ namespace MiniGames.App.Games
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("Tetris"));
             if (_rotateButton != null) _rotateButton.onClick.AddListener(() => Act(() => _game.TryRotate(1)));
             if (_hardButton != null) _hardButton.onClick.AddListener(() => Act(() => { _game.HardDrop(); return true; }));
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_restartButton, "ui.restart");
+            Loc.Label(_rotateButton, "ui.rotate");
+            Loc.Label(_hardButton, "ui.drop");
+            if (_softButton != null) Loc.Label(_softButton.GetComponent<Button>(), "ui.down");
 
             _game.Locked += OnLocked;
             _gravityTimer = ScoringRules.GravitySeconds(_game.Level);
@@ -193,8 +198,9 @@ namespace MiniGames.App.Games
 
         private string StatusText()
         {
-            if (_over) return $"Game Over   Score {_game.Score}   Lines {_game.Lines}";
-            return $"Score {_game.Score}   Lines {_game.Lines}   Next {_game.Next}";
+            if (_over)
+                return $"{Loc.T("result.game_over")}   {Loc.T("ig.score")} {_game.Score}   {Loc.T("ig.lines")} {_game.Lines}";
+            return $"{Loc.T("ig.score")} {_game.Score}   {Loc.T("ig.lines")} {_game.Lines}   {Loc.T("ig.next")} {_game.Next}";
         }
     }
 }

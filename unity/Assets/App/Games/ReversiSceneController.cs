@@ -49,6 +49,7 @@ namespace MiniGames.App.Games
             BuildCells();
             if (_backButton != null)
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
+            Loc.Label(_backButton, "ui.back");
 
             _game.Moved += r =>
             {
@@ -157,26 +158,27 @@ namespace MiniGames.App.Games
         {
             int b = _game.Board.Count(ReversiBoard.Black);
             int w = _game.Board.Count(ReversiBoard.White);
-            string score = $"   Black {b} : {w} White";
+            string score = $"   {Loc.T("ig.black")} {b} : {w} {Loc.T("ig.white")}";
             if (_vsCpu)
             {
                 switch (_game.Result)
                 {
-                    case ReversiResult.BlackWins: return "You win!" + score;
-                    case ReversiResult.WhiteWins: return "Computer wins" + score;
-                    case ReversiResult.Draw: return "Draw" + score;
+                    case ReversiResult.BlackWins: return Loc.T("result.you_win") + score;
+                    case ReversiResult.WhiteWins: return Loc.T("ig.cpu_wins") + score;
+                    case ReversiResult.Draw: return Loc.T("result.draw") + score;
                     default:
-                        return (_busy ? "Computer thinking..." : "Your turn (black)") + score;
+                        return (_busy ? Loc.T("ig.thinking") : Loc.T("ig.your_turn")) + score;
                 }
             }
             switch (_game.Result)
             {
-                case ReversiResult.BlackWins: return "Black wins!" + score;
-                case ReversiResult.WhiteWins: return "White wins!" + score;
-                case ReversiResult.Draw: return "Draw" + score;
+                case ReversiResult.BlackWins: return Loc.T("ig.wins", Loc.T("ig.black")) + score;
+                case ReversiResult.WhiteWins: return Loc.T("ig.wins", Loc.T("ig.white")) + score;
+                case ReversiResult.Draw: return Loc.T("result.draw") + score;
                 default:
-                    return (_game.CurrentPlayer == ReversiBoard.Black
-                        ? "Black's turn" : "White's turn") + score;
+                    return Loc.T("ig.turn_of",
+                        _game.CurrentPlayer == ReversiBoard.Black
+                            ? Loc.T("ig.black") : Loc.T("ig.white")) + score;
             }
         }
     }

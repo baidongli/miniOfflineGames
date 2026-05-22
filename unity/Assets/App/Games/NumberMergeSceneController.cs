@@ -46,6 +46,8 @@ namespace MiniGames.App.Games
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_newGameButton != null)
                 _newGameButton.onClick.AddListener(() => SceneManager.LoadScene("NumberMerge"));
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_newGameButton, "ui.new_game");
 
             _game.Swiped += _ => Render();
             Render();
@@ -155,9 +157,11 @@ namespace MiniGames.App.Games
         private string StatusText()
         {
             int best = _game.MaxExponent == 0 ? 0 : 1 << _game.MaxExponent;
-            if (_game.IsGameOver) return $"Game Over   Score {_game.Score}   Best {best}";
-            if (_game.ReachedGoal) return $"You reached 2048!   Score {_game.Score}";
-            return $"Score {_game.Score}   Best {best}";
+            if (_game.IsGameOver)
+                return $"{Loc.T("result.game_over")}   {Loc.T("ig.score")} {_game.Score}   {Loc.T("ig.best")} {best}";
+            if (_game.ReachedGoal)
+                return $"{Loc.T("ig.reached_2048")}   {Loc.T("ig.score")} {_game.Score}";
+            return $"{Loc.T("ig.score")} {_game.Score}   {Loc.T("ig.best")} {best}";
         }
 
         private static Color TileColor(byte exp)

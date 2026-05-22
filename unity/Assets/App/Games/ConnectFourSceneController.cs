@@ -47,6 +47,7 @@ namespace MiniGames.App.Games
             BuildCells();
             if (_backButton != null)
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
+            Loc.Label(_backButton, "ui.back");
 
             _game.Moved += r =>
             {
@@ -139,23 +140,24 @@ namespace MiniGames.App.Games
             {
                 switch (_game.Result)
                 {
-                    case GameResult.PlayerAWins: return "You win!";
-                    case GameResult.PlayerBWins: return "Computer wins";
-                    case GameResult.Draw: return "Draw";
+                    case GameResult.PlayerAWins: return Loc.T("result.you_win");
+                    case GameResult.PlayerBWins: return Loc.T("ig.cpu_wins");
+                    case GameResult.Draw: return Loc.T("result.draw");
                     default:
-                        return _busy ? "Computer thinking..."
+                        return _busy ? Loc.T("ig.thinking")
                              : _game.CurrentPlayer == ConnectFourBoard.PlayerA
-                                ? "Your turn (red)" : "Computer's turn";
+                                ? Loc.T("ig.your_turn") : Loc.T("ig.computer_turn");
                 }
             }
             switch (_game.Result)
             {
-                case GameResult.PlayerAWins: return "Red wins!";
-                case GameResult.PlayerBWins: return "Yellow wins!";
-                case GameResult.Draw: return "Draw";
+                case GameResult.PlayerAWins: return Loc.T("ig.wins", Loc.T("ig.red"));
+                case GameResult.PlayerBWins: return Loc.T("ig.wins", Loc.T("ig.yellow"));
+                case GameResult.Draw: return Loc.T("result.draw");
                 default:
-                    return _game.CurrentPlayer == ConnectFourBoard.PlayerA
-                        ? "Red's turn" : "Yellow's turn";
+                    return Loc.T("ig.turn_of",
+                        _game.CurrentPlayer == ConnectFourBoard.PlayerA
+                            ? Loc.T("ig.red") : Loc.T("ig.yellow"));
             }
         }
     }

@@ -53,6 +53,8 @@ namespace MiniGames.App.Games
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null)
                 _restartButton.onClick.AddListener(() => SceneManager.LoadScene("Snakes"));
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_restartButton, "ui.restart");
 
             Render();
             StartCoroutine(TickLoop());
@@ -151,8 +153,8 @@ namespace MiniGames.App.Games
         private string StatusText(SnakeState snake)
         {
             int score = snake.FoodEaten;
-            if (_over) return $"Game Over   Score {score}";
-            return $"Score {score}";
+            if (_over) return $"{Loc.T("result.game_over")}   {Loc.T("ig.score")} {score}";
+            return $"{Loc.T("ig.score")} {score}";
         }
     }
 }

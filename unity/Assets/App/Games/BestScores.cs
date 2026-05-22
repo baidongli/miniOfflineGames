@@ -18,8 +18,8 @@ namespace MiniGames.App.Games
             return true;
         }
 
-        /// <summary>"   New Best!" if a record, else "   Best N" - for overlay text.</summary>
+        /// <summary>Localized record/best suffix for overlay text.</summary>
         public static string Suffix(string gameId, bool isRecord)
-            => isRecord ? "   New Best!" : $"   Best {Get(gameId)}";
+            => isRecord ? "   " + Loc.T("result.new_record") : $"   {Loc.T("ig.best")} {Get(gameId)}";
     }
 }

@@ -57,6 +57,8 @@ namespace MiniGames.App.Games
             BuildCells();
             if (_backButton != null) _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
             if (_restartButton != null) _restartButton.onClick.AddListener(() => SceneManager.LoadScene("FruitMerge"));
+            Loc.Label(_backButton, "ui.back");
+            Loc.Label(_restartButton, "ui.restart");
 
             _game.Dropped += _ => Render();
             Render();
@@ -138,8 +140,8 @@ namespace MiniGames.App.Games
 
         private string StatusText()
         {
-            if (_game.IsGameOver) return $"Game Over   Score {_game.Score}";
-            return $"Score {_game.Score}   Best {_game.HighestTier}";
+            if (_game.IsGameOver) return $"{Loc.T("result.game_over")}   {Loc.T("ig.score")} {_game.Score}";
+            return $"{Loc.T("ig.score")} {_game.Score}   {Loc.T("ig.best")} {_game.HighestTier}";
         }
     }
 }

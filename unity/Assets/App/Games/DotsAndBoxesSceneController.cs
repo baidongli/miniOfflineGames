@@ -65,6 +65,7 @@ namespace MiniGames.App.Games
             BuildBoard();
             if (_backButton != null)
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
+            Loc.Label(_backButton, "ui.back");
 
             _game.Moved += OnMoved;
             Render();
@@ -233,23 +234,26 @@ namespace MiniGames.App.Games
             int p1 = _game.Board.CountOwned(1);
             if (_vsCpu)
             {
-                string score = $"   You {p0} : {p1} CPU";
+                string score = $"   {Loc.T("ig.you")} {p0} : {p1} {Loc.T("ig.cpu")}";
                 if (_game.IsGameOver)
                 {
                     int w = _game.WinnerOrDraw();
-                    return (w < 0 ? "Draw" : w == 0 ? "You win!" : "CPU wins") + score;
+                    return (w < 0 ? Loc.T("result.draw")
+                            : w == 0 ? Loc.T("result.you_win") : Loc.T("ig.cpu_wins")) + score;
                 }
-                return (_busy ? "CPU thinking..." : "Your turn") + score;
+                return (_busy ? Loc.T("ig.thinking") : Loc.T("ig.your_turn")) + score;
             }
             else
             {
-                string score = $"   Blue {p0} : {p1} Red";
+                string score = $"   {Loc.T("ig.blue")} {p0} : {p1} {Loc.T("ig.red")}";
                 if (_game.IsGameOver)
                 {
                     int w = _game.WinnerOrDraw();
-                    return (w < 0 ? "Draw" : w == 0 ? "Blue wins!" : "Red wins!") + score;
+                    return (w < 0 ? Loc.T("result.draw")
+                            : Loc.T("ig.wins", w == 0 ? Loc.T("ig.blue") : Loc.T("ig.red"))) + score;
                 }
-                return (_game.CurrentPlayer == 0 ? "Blue's turn" : "Red's turn") + score;
+                return Loc.T("ig.turn_of",
+                    _game.CurrentPlayer == 0 ? Loc.T("ig.blue") : Loc.T("ig.red")) + score;
             }
         }
     }

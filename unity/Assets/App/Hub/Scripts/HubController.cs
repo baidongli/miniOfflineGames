@@ -71,6 +71,7 @@ namespace MiniGames.App.Hub
                     case "fruit_merge":    SceneManager.LoadScene("FruitMerge");   return;
                     case "bomb_sweep":     SceneManager.LoadScene("BombSweep");     return;
                     case "color_blocks":   SceneManager.LoadScene("ColorBlocks");   return;
+                    case "maze_paint":     SceneManager.LoadScene("MazePaint");     return;
                 }
             }
 

@@ -136,7 +136,11 @@ namespace MiniGames.App.Games
                 yield return wait;
                 if (_over) break;
                 var res = SnakesEngine.Step(_state);
-                if (res.AteThisTick != null && res.AteThisTick.Count > 0) Sfx.Play("place");
+                if (res.AteThisTick != null && res.AteThisTick.Count > 0)
+                {
+                    Sfx.Play("place");
+                    if (_status != null) UiTween.Pop(_status.rectTransform, 1.15f, 0.18f);
+                }
                 Render();
                 if (res.MatchOver) { _winner = res.WinnerIndex ?? -1; _over = true; Render(); }
             }

@@ -118,6 +118,7 @@ namespace MiniGames.App.Games
             {
                 Sfx.Play("clear");
                 UiTween.Pop(_boardGrid, 0.94f, 0.14f); // whole-board "thump" on a clear
+                if (_status != null) UiTween.Pop(_status.rectTransform, 1.18f, 0.18f);
             }
             else
             {

@@ -151,6 +151,8 @@ namespace MiniGames.App.Games
                 if (shape != null)
                     foreach (var c in shape.Cells)
                         UiTween.Pop(_cells[ox + c.X, oy + c.Y].rectTransform);
+                if (r.TotalLinesCleared > 0) UiTween.Pop(_boardGrid, 0.96f, 0.14f);
+                if (_status != null) UiTween.Pop(_status.rectTransform, 1.15f, 0.18f);
             }
 
             RenderBoard();

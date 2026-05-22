@@ -62,7 +62,13 @@ namespace MiniGames.App.Games
             Art.StyleButtons((RectTransform)transform);
             Loc.Label(_restartButton, "ui.restart");
 
-            _game.Dropped += _ => Render();
+            _game.Dropped += r =>
+            {
+                Sfx.Play(r.MergesPerformed > 0 ? "clear" : "place");
+                if (r.MergesPerformed > 0) UiTween.Pop(_boardGrid, 0.96f, 0.14f);
+                if (_status != null) UiTween.Pop(_status.rectTransform, 1.15f, 0.18f);
+                Render();
+            };
             Render();
         }
 
@@ -114,7 +120,7 @@ namespace MiniGames.App.Games
         private void OnColumnTapped(int column)
         {
             if (_game.IsGameOver) return;
-            if (_game.TryDrop(column)) Sfx.Play("place");
+            _game.TryDrop(column); // sound + pulses handled in the Dropped handler
             Render();
         }
 

@@ -93,6 +93,11 @@ namespace MiniGames.App.Games
             if (_game.TrySwipe(dir, out var r))
             {
                 Sfx.Play(r.ScoreGained > 0 ? "clear" : "move");
+                if (r.ScoreGained > 0)
+                {
+                    UiTween.Pop(_boardGrid, 0.96f, 0.14f);
+                    if (_status != null) UiTween.Pop(_status.rectTransform, 1.18f, 0.18f);
+                }
                 for (int y = 0; y < N; y++)
                     for (int x = 0; x < N; x++)
                     {

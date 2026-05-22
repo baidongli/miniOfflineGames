@@ -249,11 +249,38 @@ namespace MiniGames.App.Editor
             hubSo.FindProperty("_menuButton").objectReferenceValue = menuButton;
             hubSo.FindProperty("_removeAdsButton").objectReferenceValue = removeAdsButton;
             hubSo.FindProperty("_energyBar").objectReferenceValue = energyView;
-            hubSo.ApplyModifiedPropertiesWithoutUndo();
+            hubSo.ApplyModifiedProperties();
+            EditorUtility.SetDirty(hub);
 
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, ScenePath);
             AddSceneToBuildSettings(ScenePath);
+
+            VerifyWiring();
+        }
+
+        /// <summary>
+        /// Re-open the just-saved scene from disk and confirm HubController's
+        /// _cardPrefab actually persisted. Turns a Play-time null-Instantiate
+        /// crash into an explicit build-time failure.
+        /// </summary>
+        private static void VerifyWiring()
+        {
+            var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            HubController hub = null;
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                hub = root.GetComponentInChildren<HubController>(true);
+                if (hub != null) break;
+            }
+            if (hub == null)
+                throw new System.Exception("Saved Hub scene has no HubController.");
+
+            var so = new SerializedObject(hub);
+            if (so.FindProperty("_cardPrefab").objectReferenceValue == null)
+                throw new System.Exception(
+                    "HubController._cardPrefab is still null after save - wiring " +
+                    "did not persist.");
         }
 
         // ---- helpers --------------------------------------------------------

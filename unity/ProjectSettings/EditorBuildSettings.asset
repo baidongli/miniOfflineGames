@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Hub.unity
     guid: 8108292defbf243e2a6b046ddf41319b
+  - enabled: 1
+    path: Assets/Scenes/ConnectFour.unity
+    guid: 0dbb1e45311514e53b267f0dabaa5b78
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

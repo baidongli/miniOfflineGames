@@ -241,11 +241,19 @@ namespace MiniGames.App.Editor
             scroll.viewport = viewportRt;
             scroll.content = contentRt;
 
+            // Re-load the prefab now, inside this scene, so the reference is
+            // owned by the live AssetDatabase rather than carried across the
+            // NewScene() boundary (which can stale it out).
+            var prefabGo = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            var liveCardPrefab = prefabGo != null ? prefabGo.GetComponent<GameCardView>() : null;
+            if (liveCardPrefab == null)
+                throw new System.Exception("Could not re-load GameCard prefab for wiring.");
+
             // HubController on the canvas, wired to everything.
             var hub = canvasGo.AddComponent<HubController>();
             var hubSo = new SerializedObject(hub);
             hubSo.FindProperty("_gameGrid").objectReferenceValue = contentRt;
-            hubSo.FindProperty("_cardPrefab").objectReferenceValue = cardPrefab;
+            hubSo.FindProperty("_cardPrefab").objectReferenceValue = liveCardPrefab;
             hubSo.FindProperty("_menuButton").objectReferenceValue = menuButton;
             hubSo.FindProperty("_removeAdsButton").objectReferenceValue = removeAdsButton;
             hubSo.FindProperty("_energyBar").objectReferenceValue = energyView;
@@ -277,10 +285,20 @@ namespace MiniGames.App.Editor
                 throw new System.Exception("Saved Hub scene has no HubController.");
 
             var so = new SerializedObject(hub);
-            if (so.FindProperty("_cardPrefab").objectReferenceValue == null)
+            var fields = new[]
+            {
+                "_gameGrid", "_cardPrefab", "_menuButton", "_removeAdsButton", "_energyBar"
+            };
+            var missing = new System.Collections.Generic.List<string>();
+            foreach (var f in fields)
+            {
+                var prop = so.FindProperty(f);
+                if (prop == null || prop.objectReferenceValue == null) missing.Add(f);
+            }
+            if (missing.Count > 0)
                 throw new System.Exception(
-                    "HubController._cardPrefab is still null after save - wiring " +
-                    "did not persist.");
+                    "HubController wiring did not persist. Null after save: " +
+                    string.Join(", ", missing));
         }
 
         // ---- helpers --------------------------------------------------------

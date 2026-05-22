@@ -56,12 +56,15 @@ namespace MiniGames.App.Hub
         {
             _modeSelect.gameObject.SetActive(false);
 
-            // Only Connect Four solo is wired into a scene so far; everything
-            // else logs until its scene exists.
-            if (module.Id == "connect_four" && mode == GameMode.Solo)
+            // Games wired into a solo scene so far. Everything else logs until
+            // its scene exists.
+            if (mode == GameMode.Solo)
             {
-                SceneManager.LoadScene("ConnectFour");
-                return;
+                switch (module.Id)
+                {
+                    case "connect_four": SceneManager.LoadScene("ConnectFour"); return;
+                    case "reversi":      SceneManager.LoadScene("Reversi");     return;
+                }
             }
 
             Debug.Log($"[Hub] {module.DisplayName} / {mode} not implemented yet");

@@ -127,9 +127,11 @@ namespace MiniGames.App.Games
             for (int y = 0; y < _n; y++)
                 for (int x = 0; x < _n; x++)
                 {
-                    if (_state.Board.OwnerAt(x, y) == 0) _cells[x, y].color = Owned;
-                    else if (_state.Board.TrailAt(x, y) == 0) _cells[x, y].color = Trail;
-                    else _cells[x, y].color = Empty;
+                    Color c = _state.Board.OwnerAt(x, y) == 0 ? Owned
+                            : _state.Board.TrailAt(x, y) == 0 ? Trail : Empty;
+                    if (!Art.TryApply(_cells[x, y], "maze_paint", "tile", keepColor: true))
+                        Shapes.Rounded(_cells[x, y]);
+                    _cells[x, y].color = c;
                 }
 
             var p = _state.Players[0];

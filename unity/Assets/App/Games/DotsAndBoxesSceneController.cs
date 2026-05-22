@@ -148,8 +148,11 @@ namespace MiniGames.App.Games
                 {
                     var img = NewCell($"Dot_{x}_{y}", Dot(x, y),
                         new Vector2(dotSize, dotSize), out _);
-                    img.color = DotColor;
-                    Shapes.Circle(img);
+                    if (!Art.TryApply(img, "dots_and_boxes", "dot"))
+                    {
+                        img.color = DotColor;
+                        Shapes.Circle(img);
+                    }
                 }
         }
 

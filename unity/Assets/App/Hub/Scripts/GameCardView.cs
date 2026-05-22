@@ -1,4 +1,5 @@
 using System;
+using MiniGames.App.Games;
 using MiniGames.GameModule;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace MiniGames.App.Hub
         private IGameModule _module;
         private Action<IGameModule> _onTap;
         private TMP_Text _glyphLabel;
+        private TMP_Text _bestLabel;
 
         public void Bind(IGameModule module, Action<IGameModule> onTap)
         {
@@ -35,6 +37,10 @@ namespace MiniGames.App.Hub
                 _icon.color = visual.Color;
                 EnsureGlyph().text = visual.Glyph;
             }
+
+            // Personal best (score games only; turn-based games never store one).
+            int best = BestScores.Get(module.Id);
+            EnsureBest().text = best > 0 ? $"Best {best}" : "";
 
             _multiplayerBadge?.SetActive((module.Capabilities & GameCapabilities.Multiplayer) != 0);
             _sameDeviceBadge?.SetActive((module.Capabilities & GameCapabilities.SameDevice) != 0);
@@ -61,6 +67,27 @@ namespace MiniGames.App.Hub
             _glyphLabel.color = new Color(1f, 1f, 1f, 0.92f);
             _glyphLabel.raycastTarget = false;
             return _glyphLabel;
+        }
+
+        // Small "Best N" strip across the top of the card, created once.
+        private TMP_Text EnsureBest()
+        {
+            if (_bestLabel != null) return _bestLabel;
+            var go = new GameObject("Best", typeof(RectTransform));
+            var rt = go.GetComponent<RectTransform>();
+            rt.SetParent(transform, false);
+            rt.anchorMin = new Vector2(0f, 0.90f);
+            rt.anchorMax = new Vector2(1f, 1f);
+            rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero;
+            _bestLabel = go.AddComponent<TextMeshProUGUI>();
+            _bestLabel.alignment = TextAlignmentOptions.Center;
+            _bestLabel.fontSize = 22;
+            _bestLabel.enableAutoSizing = true;
+            _bestLabel.fontSizeMin = 12;
+            _bestLabel.fontSizeMax = 26;
+            _bestLabel.color = new Color(1f, 1f, 1f, 0.85f);
+            _bestLabel.raycastTarget = false;
+            return _bestLabel;
         }
     }
 }

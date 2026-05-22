@@ -138,8 +138,9 @@ namespace MiniGames.App.Games
         {
             if (_dragging < 0) return;
             _dragging = -1;
-            if (TryGetOrigin(handIndex, screenPos, out int ox, out int oy))
-                _game.TryPlay(handIndex, ox, oy, out _);
+            if (TryGetOrigin(handIndex, screenPos, out int ox, out int oy)
+                && _game.TryPlay(handIndex, ox, oy, out var r))
+                Sfx.Play(r.TotalLinesCleared > 0 ? "clear" : "place");
 
             RenderBoard();
             RenderHand();

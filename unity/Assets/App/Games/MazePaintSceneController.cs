@@ -95,6 +95,7 @@ namespace MiniGames.App.Games
                 yield return wait;
                 if (_over) break;
                 var res = MazePaintEngine.Step(_state);
+                if (res.CapturedThisTick != null && res.CapturedThisTick.Count > 0) Sfx.Play("clear");
                 Render();
                 if (res.MatchOver) { _over = true; Render(); }
             }

@@ -109,7 +109,7 @@ namespace MiniGames.App.Games
         private void OnColumnTapped(int column)
         {
             if (_game.IsGameOver) return;
-            _game.TryDrop(column);
+            if (_game.TryDrop(column)) Sfx.Play("place");
             Render();
         }
 

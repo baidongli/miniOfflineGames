@@ -82,7 +82,8 @@ namespace MiniGames.App.Games
 
         private void DoSwipe(SwipeDir dir)
         {
-            _game.TrySwipe(dir, out _);
+            if (_game.TrySwipe(dir, out var r))
+                Sfx.Play(r.ScoreGained > 0 ? "clear" : "move");
             Render();
         }
 

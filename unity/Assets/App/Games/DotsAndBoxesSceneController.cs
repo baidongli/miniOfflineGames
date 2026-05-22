@@ -165,6 +165,7 @@ namespace MiniGames.App.Games
             if (_busy || _game.IsGameOver) return;
             if (_game.CurrentPlayer != 0) return;            // human is player 0
             if (!_game.TryPlay(edge, out _)) return;         // illegal/taken -> ignore
+            Sfx.Play("place");
             if (!_game.IsGameOver && _game.CurrentPlayer == 1)
                 StartCoroutine(AiLoop());
         }
@@ -202,7 +203,14 @@ namespace MiniGames.App.Games
                 }
 
             if (_status != null) _status.text = StatusText();
-            if (_game.IsGameOver) GameOverlay.Show(StatusText());
+            if (_game.IsGameOver)
+            {
+                int w = _game.WinnerOrDraw();
+                GameOverlay.Show(StatusText(),
+                    w == 0 ? GameOverlay.Outcome.Win
+                    : w == 1 ? GameOverlay.Outcome.Lose
+                    : GameOverlay.Outcome.Neutral);
+            }
         }
 
         private Color EdgeColor(EdgeKind kind, int x, int y, bool drawn)

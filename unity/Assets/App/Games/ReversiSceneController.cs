@@ -86,6 +86,7 @@ namespace MiniGames.App.Games
             if (_busy || _game.IsGameOver) return;
             if (_game.CurrentPlayer != ReversiBoard.Black) return; // human is Black
             if (!_game.TryPlay(x, y, out _)) return;               // illegal -> ignore
+            Sfx.Play("place");
             if (!_game.IsGameOver && _game.CurrentPlayer == ReversiBoard.White)
                 StartCoroutine(AiLoop());
             else
@@ -128,7 +129,11 @@ namespace MiniGames.App.Games
                     _cells[lx, ly].color = FeltHint;
 
             if (_status != null) _status.text = StatusText();
-            if (_game.IsGameOver) GameOverlay.Show(StatusText());
+            if (_game.IsGameOver)
+                GameOverlay.Show(StatusText(),
+                    _game.Result == ReversiResult.BlackWins ? GameOverlay.Outcome.Win
+                    : _game.Result == ReversiResult.WhiteWins ? GameOverlay.Outcome.Lose
+                    : GameOverlay.Outcome.Neutral);
         }
 
         private string StatusText()

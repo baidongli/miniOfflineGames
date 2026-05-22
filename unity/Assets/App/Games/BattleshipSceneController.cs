@@ -125,6 +125,7 @@ namespace MiniGames.App.Games
             var r = _cpuFleet.RegisterIncomingShot(x, y, out var kind, out var sunkCells);
             _humanTracker.RecordShotResult(x, y, r);
             if (r == ShotResult.Sunk) _humanTracker.RecordSunkShip(sunkCells, kind);
+            Sfx.Play(r == ShotResult.Miss ? "miss" : r == ShotResult.Sunk ? "clear" : "hit");
 
             if (_cpuFleet.AllShipsSunk()) { _phase = Phase.Over; RenderAll(); return; }
 
@@ -163,7 +164,9 @@ namespace MiniGames.App.Games
                     _ownCells[x, y].color = OwnColor(x, y);
                 }
             if (_status != null) _status.text = StatusText();
-            if (_phase == Phase.Over) GameOverlay.Show(StatusText());
+            if (_phase == Phase.Over)
+                GameOverlay.Show(StatusText(),
+                    _cpuFleet.AllShipsSunk() ? GameOverlay.Outcome.Win : GameOverlay.Outcome.Lose);
         }
 
         private Color EnemyColor(int x, int y)

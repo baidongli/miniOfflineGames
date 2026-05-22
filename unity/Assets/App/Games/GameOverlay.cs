@@ -15,6 +15,8 @@ namespace MiniGames.App.Games
     /// </summary>
     public sealed class GameOverlay : MonoBehaviour
     {
+        public enum Outcome { Neutral, Win, Lose }
+
         private static bool _active;
 
         private static readonly Color Dim = new Color(0f, 0f, 0f, 0.7f);
@@ -25,10 +27,11 @@ namespace MiniGames.App.Games
         private CanvasGroup _cg;
         private RectTransform _panel;
 
-        public static void Show(string message)
+        public static void Show(string message, Outcome outcome = Outcome.Neutral)
         {
             if (_active) return;
             _active = true;
+            Sfx.Play(outcome == Outcome.Win ? "win" : outcome == Outcome.Lose ? "lose" : "end");
             var go = new GameObject("GameOverlay");
             go.AddComponent<GameOverlay>().Build(message);
         }

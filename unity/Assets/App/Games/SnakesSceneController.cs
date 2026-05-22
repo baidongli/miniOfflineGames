@@ -97,6 +97,7 @@ namespace MiniGames.App.Games
                 yield return wait;
                 if (_over) break;
                 var res = SnakesEngine.Step(_state);
+                if (res.AteThisTick != null && res.AteThisTick.Count > 0) Sfx.Play("place");
                 Render();
                 if (res.MatchOver) { _over = true; Render(); }
             }

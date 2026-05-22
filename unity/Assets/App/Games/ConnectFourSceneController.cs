@@ -88,6 +88,7 @@ namespace MiniGames.App.Games
             if (_busy || _game.IsGameOver) return;
             if (_game.CurrentPlayer != ConnectFourBoard.PlayerA) return; // human is A
             if (!_game.TryPlay(column, out _)) return;
+            Sfx.Play("place");
             if (!_game.IsGameOver && _game.CurrentPlayer == ConnectFourBoard.PlayerB)
                 StartCoroutine(AiMove());
         }
@@ -114,7 +115,11 @@ namespace MiniGames.App.Games
                                        : SlotEmpty;
                 }
             if (_status != null) _status.text = StatusText();
-            if (_game.IsGameOver) GameOverlay.Show(StatusText());
+            if (_game.IsGameOver)
+                GameOverlay.Show(StatusText(),
+                    _game.Result == GameResult.PlayerAWins ? GameOverlay.Outcome.Win
+                    : _game.Result == GameResult.PlayerBWins ? GameOverlay.Outcome.Lose
+                    : GameOverlay.Outcome.Neutral);
         }
 
         private string StatusText()

@@ -46,7 +46,11 @@ namespace MiniGames.App.Games
             if (_backButton != null)
                 _backButton.onClick.AddListener(() => SceneManager.LoadScene("Hub"));
 
-            _game.Moved += _ => Render();
+            _game.Moved += r =>
+            {
+                if (r.Accepted) UiTween.Pop(_cells[r.Column, r.Row].rectTransform);
+                Render();
+            };
             Render();
         }
 

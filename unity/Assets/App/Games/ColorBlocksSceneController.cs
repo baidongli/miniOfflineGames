@@ -138,9 +138,15 @@ namespace MiniGames.App.Games
         {
             if (_dragging < 0) return;
             _dragging = -1;
+            var shape = _game.Hand[handIndex];
             if (TryGetOrigin(handIndex, screenPos, out int ox, out int oy)
                 && _game.TryPlay(handIndex, ox, oy, out var r))
+            {
                 Sfx.Play(r.TotalLinesCleared > 0 ? "clear" : "place");
+                if (shape != null)
+                    foreach (var c in shape.Cells)
+                        UiTween.Pop(_cells[ox + c.X, oy + c.Y].rectTransform);
+            }
 
             RenderBoard();
             RenderHand();

@@ -79,6 +79,9 @@ namespace MiniGames.App.Games
         {
             if (r.Accepted)
                 _edgeOwner[(r.Edge.Kind, r.Edge.X, r.Edge.Y)] = r.Player;
+            if (r.BoxesClaimed != null)
+                foreach (var (bx, by) in r.BoxesClaimed)
+                    UiTween.Pop(_boxImg[bx, by].rectTransform);
             Render();
         }
 

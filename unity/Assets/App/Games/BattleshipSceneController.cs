@@ -126,6 +126,7 @@ namespace MiniGames.App.Games
             _humanTracker.RecordShotResult(x, y, r);
             if (r == ShotResult.Sunk) _humanTracker.RecordSunkShip(sunkCells, kind);
             Sfx.Play(r == ShotResult.Miss ? "miss" : r == ShotResult.Sunk ? "clear" : "hit");
+            UiTween.Pop(_enemyCells[x, y].rectTransform);
 
             if (_cpuFleet.AllShipsSunk()) { _phase = Phase.Over; RenderAll(); return; }
 
